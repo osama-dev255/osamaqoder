@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "description": "A React dashboard for interacting with the Google Sheets REST API",
   "type": "module",
-  "homepage": ".",
+  "homepage": "https://osama-dev255.github.io/osamaqoder",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
