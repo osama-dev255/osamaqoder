@@ -1,6 +1,13 @@
-# Google Sheets POS Dashboard
+# Railway POS System
 
-A professional Point of Sale (POS) system built with React, TypeScript, Tailwind CSS, and shadcn/ui components. This application connects to a Google Sheets backend for data storage and management.
+A professional Point of Sale (POS) system built with React, TypeScript, Tailwind CSS, and shadcn/ui components. This application connects to a Google Sheets backend for data storage and management, with a modern UI featuring animations and a professional splash screen.
+
+## Recent Enhancements
+
+- ✨ **Splash Screen**: Added a professional animated splash screen
+- 🎨 **Redesigned Login Page**: Modern glass-morphism design with enhanced UX
+- 🌟 **UI Animations**: Smooth framer-motion animations throughout the application
+- 🚀 **Improved User Experience**: Enhanced transitions and visual feedback
 
 ## Features
 
@@ -12,6 +19,8 @@ A professional Point of Sale (POS) system built with React, TypeScript, Tailwind
 - 📤 **Export Capabilities**: Export data to CSV, Excel, and JSON formats
 - 📋 **Pagination**: Efficient data handling for large datasets
 - 🎨 **Modern UI**: Beautiful interface built with Tailwind CSS and shadcn/ui
+- ✨ **Animated Experience**: Smooth animations powered by framer-motion
+- 🚀 **Professional Branding**: Cohesive design language throughout the application
 
 ## Prerequisites
 
@@ -67,15 +76,19 @@ The build files will be output to the `dist` directory.
 
 ```
 src/
-├── components/        # Reusable UI components
-├── config/            # Configuration files
-├── contexts/          # React contexts
-├── hooks/             # Custom hooks
-├── lib/               # Utility functions
-├── pages/             # Page components
-├── services/          # API service functions
-├── types/             # TypeScript types
-└── App.tsx            # Main application component
+├── components/           # Reusable UI components
+│   ├── SplashScreen/     # Splash screen component
+│   ├── ui/               # shadcn/ui components
+│   └── ...               # Other components
+├── config/               # Configuration files
+├── contexts/             # React contexts
+├── hooks/                # Custom hooks
+├── lib/                  # Utility functions
+├── pages/                # Page components
+├── services/             # API service functions
+├── types/                # TypeScript types
+├── App.tsx               # Main application component
+└── main.tsx              # Application entry point
 ```
 
 ## Technologies Used
@@ -87,6 +100,7 @@ src/
 - [Axios](https://axios-http.com/) for HTTP requests
 - [Recharts](https://recharts.org/) for data visualization
 - [Lucide React](https://lucide.dev/) for icons
+- [Framer Motion](https://www.framer.com/motion/) for animations
 - [Vite](https://vitejs.dev/) for build tooling
 
 ## Backend Integration
@@ -136,6 +150,20 @@ The frontend connects to a Google Sheets REST API backend hosted at:
    - Key: `VITE_BACKEND_URL`
    - Value: `https://google-sheets-rest-api-production.up.railway.app`
 
+## Recent Updates
+
+### Splash Screen & Login Page Enhancements
+- Added a professional animated splash screen with gradient effects
+- Completely redesigned the login page with modern glass-morphism design
+- Implemented smooth animations using framer-motion throughout the application
+- Enhanced dashboard with staggered animations for improved user experience
+
+### UI/UX Improvements
+- Improved visual hierarchy and spacing
+- Added better feedback for user interactions
+- Enhanced form elements with improved styling
+- Added professional loading states and transitions
+
 ## Learn More
 
 To learn more about the technologies used in this project:
@@ -144,6 +172,7 @@ To learn more about the technologies used in this project:
 - [TypeScript Documentation](https://www.typescriptlang.org/)
 - [Tailwind CSS Documentation](https://tailwindcss.com/)
 - [shadcn/ui Documentation](https://ui.shadcn.com/)
+- [Framer Motion Documentation](https://www.framer.com/docs/)
 - [Vite Documentation](https://vitejs.dev/)
 
 ## Support
