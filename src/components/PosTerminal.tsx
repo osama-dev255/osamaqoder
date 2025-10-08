@@ -51,7 +51,6 @@ export function PosTerminal() {
         
         if (response && response.data && response.data.values) {
           const rows = response.data.values;
-          const headers = rows[0];
           
           // Map the data to product objects
           const productData = rows.slice(1).map((row: any[], index: number) => ({

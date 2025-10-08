@@ -45,7 +45,6 @@ export function Customers() {
         
         if (response && response.data && response.data.values) {
           const rows = response.data.values;
-          const headers = rows[0];
           
           // Map the data to customer objects
           const customerData = rows.slice(1).map((row: any[], index: number) => ({
