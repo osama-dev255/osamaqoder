@@ -17,6 +17,7 @@ import { CenteringDebug } from './pages/CenteringDebug';
 import { TailwindTest } from './pages/TailwindTest';
 import { CenteringTestFinal } from './pages/CenteringTestFinal';
 import { CenteredDashboard } from './pages/CenteredDashboard';
+import { ThemeTest } from './pages/ThemeTest';
 
 function App() {
   return (
@@ -62,6 +63,13 @@ function App() {
         <Route path="/centered-dashboard" element={
           <ProtectedRoute>
             <CenteredDashboard />
+          </ProtectedRoute>
+        } />
+        <Route path="/theme-test" element={
+          <ProtectedRoute>
+            <Layout>
+              <ThemeTest />
+            </Layout>
           </ProtectedRoute>
         } />
         <Route 

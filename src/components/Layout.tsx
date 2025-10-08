@@ -49,27 +49,27 @@ export function Layout({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-gradient-to-br from-gray-900 to-gray-800">
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div 
-          className="fixed inset-0 z-40 bg-black bg-opacity-50 lg:hidden"
+          className="fixed inset-0 z-40 bg-black bg-opacity-70 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       {/* Sidebar */}
       <div 
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 ${
+        className={`fixed inset-y-0 left-0 z-50 w-64 bg-gradient-to-b from-gray-800 to-gray-900 shadow-2xl transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        <div className="flex items-center justify-between h-16 px-4 border-b">
+        <div className="flex items-center justify-between h-16 px-4 border-b border-gray-700">
           <div className="flex items-center">
-            <div className="flex-shrink-0 font-bold text-xl text-blue-600">POS System</div>
+            <div className="flex-shrink-0 font-bold text-xl text-indigo-400">POS System</div>
           </div>
           <button
-            className="lg:hidden"
+            className="lg:hidden text-gray-300 hover:text-white"
             onClick={() => setSidebarOpen(false)}
           >
             <X className="h-6 w-6" />
@@ -84,10 +84,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 <Link
                   key={item.name}
                   to={item.href}
-                  className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
+                  className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 ${
                     isActive
-                      ? 'bg-blue-100 text-blue-700'
-                      : 'text-gray-700 hover:bg-gray-100'
+                      ? 'bg-indigo-600 text-white shadow-lg'
+                      : 'text-gray-300 hover:bg-gray-700 hover:text-white'
                   }`}
                   onClick={() => setSidebarOpen(false)}
                 >
@@ -98,30 +98,39 @@ export function Layout({ children }: { children: React.ReactNode }) {
             })}
           </div>
         </nav>
+        <div className="absolute bottom-0 w-full p-4 border-t border-gray-700">
+          <div className="flex items-center text-gray-400 text-sm">
+            <div className="bg-gray-200 border-2 border-dashed rounded-xl w-8 h-8" />
+            <div className="ml-3">
+              <p className="font-medium">{user?.name || 'User'}</p>
+              <p className="text-xs capitalize">{user?.role || 'user'}</p>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Main content */}
       <div className="flex flex-col flex-1 w-0 overflow-hidden">
         {/* Top navigation */}
-        <div className="relative z-10 flex flex-shrink-0 h-16 bg-white border-b">
+        <div className="relative z-10 flex flex-shrink-0 h-16 bg-gray-800 border-b border-gray-700">
           <button
-            className="px-4 text-gray-500 border-r border-gray-200 focus:outline-none lg:hidden"
+            className="px-4 text-gray-400 border-r border-gray-700 focus:outline-none lg:hidden hover:text-white"
             onClick={() => setSidebarOpen(true)}
           >
             <Menu className="h-6 w-6" />
           </button>
           <div className="flex items-center justify-between flex-1 px-4">
             <div className="flex items-center">
-              <h1 className="text-xl font-semibold text-gray-900">
+              <h1 className="text-xl font-semibold text-white">
                 {navigation.find(item => item.href === location.pathname)?.name || 'Dashboard'}
               </h1>
             </div>
             <div className="flex items-center space-x-4">
-              <Button variant="outline" size="sm" className="hidden sm:flex items-center">
+              <Button variant="outline" size="sm" className="hidden sm:flex items-center bg-gray-700 text-white border-gray-600 hover:bg-gray-600">
                 <Printer className="h-4 w-4 mr-2" />
                 Print
               </Button>
-              <Button variant="outline" size="sm" className="hidden sm:flex items-center">
+              <Button variant="outline" size="sm" className="hidden sm:flex items-center bg-gray-700 text-white border-gray-600 hover:bg-gray-600">
                 <Download className="h-4 w-4 mr-2" />
                 Export
               </Button>
@@ -131,20 +140,20 @@ export function Layout({ children }: { children: React.ReactNode }) {
                     <div className="bg-gray-200 border-2 border-dashed rounded-xl w-8 h-8" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56" align="end" forceMount>
-                  <DropdownMenuLabel className="font-normal">
+                <DropdownMenuContent className="w-56 bg-gray-800 border-gray-700" align="end" forceMount>
+                  <DropdownMenuLabel className="font-normal text-white">
                     <div className="flex flex-col space-y-1">
                       <p className="text-sm font-medium leading-none">{user?.name || 'User'}</p>
-                      <p className="text-xs leading-none text-muted-foreground">
+                      <p className="text-xs leading-none text-gray-400">
                         {user?.email || 'user@example.com'}
                       </p>
-                      <p className="text-xs leading-none text-muted-foreground capitalize">
+                      <p className="text-xs leading-none text-gray-400 capitalize">
                         {user?.role || 'user'}
                       </p>
                     </div>
                   </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleLogout}>
+                  <DropdownMenuSeparator className="bg-gray-700" />
+                  <DropdownMenuItem className="text-white hover:bg-gray-700" onClick={handleLogout}>
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Log out</span>
                   </DropdownMenuItem>
@@ -155,7 +164,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         </div>
 
         {/* Main content area */}
-        <main className="flex-1 overflow-y-auto p-4 md:p-6 bg-gray-50">
+        <main className="flex-1 overflow-y-auto bg-gradient-to-br from-gray-800 to-gray-900 p-4 md:p-6">
           <div className="container mx-auto">
             {children}
           </div>
