@@ -13,6 +13,7 @@ import {
   TrendingDown
 } from 'lucide-react';
 import { getSpreadsheetMetadata, getSheetData } from '@/services/apiService';
+import { formatCurrency } from '@/lib/currency';
 import type { SpreadsheetMetadata } from '@/types';
 
 export function Dashboard() {
@@ -72,7 +73,7 @@ export function Dashboard() {
 
   // Calculate stats based on real data
   const stats = [
-    { title: "Total Revenue", value: `TSh${totalRevenue.toLocaleString()}`, description: "+12.1% from last month", icon: DollarSign, trend: "up" },
+    { title: "Total Revenue", value: formatCurrency(totalRevenue), description: "+12.1% from last month", icon: DollarSign, trend: "up" },
     { title: "Orders", value: totalOrders.toString(), description: "+8% from last month", icon: ShoppingCart, trend: "up" },
     { title: "Products Sold", value: "1,245", description: "+15.1% from last month", icon: Package, trend: "up" },
     { title: "Active Customers", value: "421", description: "+42 since last hour", icon: Users, trend: "up" },
@@ -122,7 +123,7 @@ export function Dashboard() {
                   <div className="text-2xl font-bold">{stat.value}</div>
                   <p className="text-xs text-muted-foreground flex items-center">
                     {stat.trend === "up" ? (
-                      <TrendingUp className="h-3 w-3 mr-1 text-green-500" />
+                      <TrendingUp className="h-3 w-33 mr-1 text-green-500" />
                     ) : (
                       <TrendingDown className="h-3 w-3 mr-1 text-red-500" />
                     )}
@@ -180,7 +181,7 @@ export function Dashboard() {
                       </p>
                     </div>
                     <div className="ml-auto font-medium">
-                      {sale[9] || 'TSh0'}
+                      {formatCurrency(sale[9] || '0')}
                     </div>
                   </motion.div>
                 ))}

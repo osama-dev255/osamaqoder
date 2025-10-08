@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { PrintReceipt } from '@/components/PrintReceipt';
 import { getSheetData } from '@/services/apiService';
+import { formatCurrency } from '@/lib/currency';
 
 interface Product {
   id: string;
@@ -242,7 +243,7 @@ export function PosTerminal() {
                     <div className="flex justify-between items-start">
                       <div>
                         <h3 className="font-medium">{product.name}</h3>
-                        <p className="text-sm text-muted-foreground">TSh{product.price.toLocaleString()}</p>
+                        <p className="text-sm text-muted-foreground">{formatCurrency(product.price)}</p>
                       </div>
                       <Badge variant={product.stock > 0 ? "default" : "destructive"}>
                         {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
@@ -297,7 +298,7 @@ export function PosTerminal() {
                         <TableCell>
                           <div className="font-medium">{item.product.name}</div>
                           <div className="text-sm text-muted-foreground">
-                            TSh{item.product.price.toLocaleString()} each
+                            {formatCurrency(item.product.price)} each
                           </div>
                         </TableCell>
                         <TableCell className="text-right">
@@ -320,7 +321,7 @@ export function PosTerminal() {
                           </div>
                         </TableCell>
                         <TableCell className="text-right">
-                          TSh{(item.product.price * item.quantity).toLocaleString()}
+                          {formatCurrency(item.product.price * item.quantity)}
                         </TableCell>
                         <TableCell className="text-right">
                           <Button 
@@ -339,15 +340,15 @@ export function PosTerminal() {
                 <div className="mt-4 space-y-2">
                   <div className="flex justify-between">
                     <span>Subtotal:</span>
-                    <span>TSh{subtotal.toLocaleString()}</span>
+                    <span>{formatCurrency(subtotal)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Tax ({taxRate}%):</span>
-                    <span>TSh{tax.toLocaleString()}</span>
+                    <span>{formatCurrency(tax)}</span>
                   </div>
                   <div className="flex justify-between font-bold text-lg pt-2 border-t">
                     <span>Total:</span>
-                    <span>TSh{total.toLocaleString()}</span>
+                    <span>{formatCurrency(total)}</span>
                   </div>
                 </div>
 

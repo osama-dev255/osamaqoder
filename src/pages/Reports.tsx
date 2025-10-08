@@ -24,6 +24,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { getSheetData } from '@/services/apiService';
+import { formatCurrency } from '@/lib/currency';
 
 export function Reports() {
   const [dateRange, setDateRange] = useState('last-7-days');
@@ -80,10 +81,10 @@ export function Reports() {
             revenue: data.revenue
           }));
           
-          const categoryChartData = Object.entries(categories).map(([name, value]: [string, number]) => ({
+          const categoryChartData = Object.entries(categories).map(([name, value]) => ({
             name,
-            value
-          }));
+            value: Number(value)
+          })) as { name: string; value: number }[];
           
           setSalesData(chartData.slice(0, 7)); // Last 7 days
           setCategoryData(categoryChartData);
@@ -208,7 +209,7 @@ export function Reports() {
                 <XAxis dataKey="name" />
                 <YAxis />
                 <Tooltip 
-                  formatter={(value) => [`TSh${Number(value).toLocaleString()}`, 'Revenue']}
+                  formatter={(value) => [formatCurrency(Number(value)), 'Revenue']}
                   labelFormatter={(label) => `Date: ${label}`}
                 />
                 <Legend />
@@ -244,7 +245,7 @@ export function Reports() {
                   ))}
                 </Pie>
                 <Tooltip 
-                  formatter={(value) => [`TSh${Number(value).toLocaleString()}`, 'Revenue']}
+                  formatter={(value) => [formatCurrency(Number(value)), 'Revenue']}
                 />
               </PieChart>
             </ResponsiveContainer>
@@ -271,7 +272,7 @@ export function Reports() {
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="font-medium">TSh{item.value.toLocaleString()}</p>
+                  <p className="font-medium">{formatCurrency(item.value)}</p>
                   <p className="text-sm text-muted-foreground">{Math.floor(item.value / 1000)} sold</p>
                 </div>
               </div>

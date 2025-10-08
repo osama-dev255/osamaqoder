@@ -27,6 +27,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { getSheetData } from '@/services/apiService';
+import { formatCurrency } from '@/lib/currency';
 
 export function Products() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -194,7 +195,7 @@ export function Products() {
                   <TableCell>
                     <Badge variant="outline">{product.category}</Badge>
                   </TableCell>
-                  <TableCell>TSh{product.price.toLocaleString()}</TableCell>
+                  <TableCell>{formatCurrency(product.price)}</TableCell>
                   <TableCell>{product.stock}</TableCell>
                   <TableCell>
                     {product.status === 'active' && <Badge variant="default">Active</Badge>}

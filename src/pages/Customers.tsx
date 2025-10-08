@@ -28,6 +28,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { getSheetData } from '@/services/apiService';
+import { formatCurrency } from '@/lib/currency';
 
 export function Customers() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -202,7 +203,7 @@ export function Customers() {
                   <TableCell>
                     <div className="text-sm">{customer.phone}</div>
                   </TableCell>
-                  <TableCell>TSh{customer.totalSpent.toLocaleString()}</TableCell>
+                  <TableCell>{formatCurrency(customer.totalSpent)}</TableCell>
                   <TableCell>{customer.orders}</TableCell>
                   <TableCell>
                     {customer.status === 'active' && <Badge variant="default">Active</Badge>}

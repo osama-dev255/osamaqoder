@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Printer } from 'lucide-react';
+import { formatCurrency } from '@/lib/currency';
 
 interface PrintReceiptProps {
   data: {
@@ -63,7 +64,7 @@ export function PrintReceipt({ data }: PrintReceiptProps) {
                   <span>{item.name}</span>
                   <span className="ml-2">x{item.quantity}</span>
                 </div>
-                <span>${(item.price * item.quantity).toFixed(2)}</span>
+                <span>{formatCurrency(item.price * item.quantity)}</span>
               </div>
             ))}
           </div>
@@ -71,15 +72,15 @@ export function PrintReceipt({ data }: PrintReceiptProps) {
           <div className="text-sm space-y-1">
             <div className="flex justify-between">
               <span>Subtotal:</span>
-              <span>${data.subtotal.toFixed(2)}</span>
+              <span>{formatCurrency(data.subtotal)}</span>
             </div>
             <div className="flex justify-between">
               <span>Tax:</span>
-              <span>${data.tax.toFixed(2)}</span>
+              <span>{formatCurrency(data.tax)}</span>
             </div>
             <div className="flex justify-between font-bold mt-1 pt-1 border-t">
               <span>Total:</span>
-              <span>${data.total.toFixed(2)}</span>
+              <span>{formatCurrency(data.total)}</span>
             </div>
           </div>
           
