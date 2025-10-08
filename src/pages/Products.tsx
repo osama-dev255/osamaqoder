@@ -58,8 +58,8 @@ export function Products() {
           }));
           
           // Remove duplicates by product name
-          const uniqueProducts = productData.filter((product, index, self) => 
-            index === self.findIndex(p => p.name === product.name)
+          const uniqueProducts = productData.filter((product: any, index: number, self: any[]) => 
+            index === self.findIndex((p: any) => p.name === product.name)
           );
           
           setProducts(uniqueProducts);

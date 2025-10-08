@@ -229,7 +229,7 @@ export function RefundProcessor() {
                   <Textarea
                     id="refundReason"
                     value={refundReason}
-                    onChange={(e) => setRefundReason(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setRefundReason(e.target.value)}
                     placeholder="Enter reason for refund (e.g., defective product, customer dissatisfaction)"
                     rows={3}
                   />

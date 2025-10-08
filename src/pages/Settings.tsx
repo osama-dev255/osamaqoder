@@ -7,7 +7,6 @@ import { Switch } from '@/components/ui/switch';
 import { 
   Save, 
   Building, 
-  CreditCard, 
   Receipt, 
   Bell, 
   Shield, 

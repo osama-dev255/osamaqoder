@@ -61,8 +61,8 @@ export function Customers() {
           }));
           
           // Remove duplicates by customer name
-          const uniqueCustomers = customerData.filter((customer, index, self) => 
-            index === self.findIndex(c => c.name === customer.name)
+          const uniqueCustomers = customerData.filter((customer: any, index: number, self: any[]) => 
+            index === self.findIndex((c: any) => c.name === customer.name)
           );
           
           setCustomers(uniqueCustomers);
