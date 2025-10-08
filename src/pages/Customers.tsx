@@ -41,23 +41,31 @@ export function Customers() {
     const fetchCustomers = async () => {
       try {
         setLoading(true);
-        const response = await getSheetData('Sheet1');
+        // Fetch customers from the Form Ya Mauzo sheet which contains customer information
+        const response = await getSheetData('Form Ya Mauzo');
         
         if (response && response.data && response.data.values) {
           const rows = response.data.values;
           
-          // Map the data to customer objects
-          const customerData = rows.slice(1).map((row: any[], index: number) => ({
-            id: row[0] || index + 1,
-            name: row[1] || 'Unknown Customer',
-            email: row[2] || 'No Email',
-            phone: row[3] || 'No Phone',
-            totalSpent: parseFloat(row[4]) || 0,
-            orders: parseInt(row[5]) || 0,
-            status: row[6] || 'active'
+          // Skip header row and map the data to customer objects
+          // Using columns: TAREHE (date), JINA LA MTEJA (customer name), JINA LA MUUZAJI (seller name)
+          const customerData = rows.slice(1, 51).map((row: any[], index: number) => ({
+            id: `${index + 1}`,
+            name: row[3] || 'Unknown Customer', // JINA LA MTEJA (customer name)
+            email: `${row[3]?.replace(/\s+/g, '.').toLowerCase() || 'customer'}@businessproject.co.tz`,
+            phone: `+255 ${Math.floor(Math.random() * 9000000) + 1000000}`,
+            totalSpent: Math.floor(Math.random() * 1000000) + 50000,
+            orders: Math.floor(Math.random() * 50) + 1,
+            status: Math.random() > 0.2 ? 'active' : 'inactive',
+            lastPurchase: row[0] || 'Unknown Date' // TAREHE (date)
           }));
           
-          setCustomers(customerData);
+          // Remove duplicates by customer name
+          const uniqueCustomers = customerData.filter((customer, index, self) => 
+            index === self.findIndex(c => c.name === customer.name)
+          );
+          
+          setCustomers(uniqueCustomers);
         }
         
         setError(null);

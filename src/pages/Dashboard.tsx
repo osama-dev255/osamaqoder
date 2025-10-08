@@ -10,11 +10,13 @@ import {
   CreditCard, 
   Users,
   TrendingUp,
-  TrendingDown
+  TrendingDown,
+  Calendar
 } from 'lucide-react';
 import { getSpreadsheetMetadata, getSheetData } from '@/services/apiService';
 import { formatCurrency } from '@/lib/currency';
 import type { SpreadsheetMetadata } from '@/types';
+import { useNavigate } from 'react-router-dom';
 
 export function Dashboard() {
   const [metadata, setMetadata] = useState<SpreadsheetMetadata | null>(null);
@@ -23,6 +25,7 @@ export function Dashboard() {
   const [salesData, setSalesData] = useState<any[]>([]);
   const [totalRevenue, setTotalRevenue] = useState<number>(0);
   const [totalOrders, setTotalOrders] = useState<number>(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -259,7 +262,7 @@ export function Dashboard() {
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 1.3, duration: 0.3 }}
             >
-              <Button className="w-full">
+              <Button className="w-full" onClick={() => navigate('/sales')}>
                 <ShoppingCart className="mr-2 h-4 w-4" />
                 New Sale
               </Button>
@@ -269,7 +272,7 @@ export function Dashboard() {
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 1.4, duration: 0.3 }}
             >
-              <Button variant="outline" className="w-full">
+              <Button variant="outline" className="w-full" onClick={() => navigate('/products')}>
                 <Package className="mr-2 h-4 w-4" />
                 Add Product
               </Button>
@@ -279,7 +282,7 @@ export function Dashboard() {
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 1.5, duration: 0.3 }}
             >
-              <Button variant="outline" className="w-full">
+              <Button variant="outline" className="w-full" onClick={() => navigate('/customers')}>
                 <Users className="mr-2 h-4 w-4" />
                 Add Customer
               </Button>
@@ -289,9 +292,29 @@ export function Dashboard() {
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 1.6, duration: 0.3 }}
             >
-              <Button variant="outline" className="w-full">
+              <Button variant="outline" className="w-full" onClick={() => navigate('/refunds')}>
                 <CreditCard className="mr-2 h-4 w-4" />
-                Process Payment
+                Process Refund
+              </Button>
+            </motion.div>
+            <motion.div
+              initial={{ y: 10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 1.7, duration: 0.3 }}
+            >
+              <Button variant="outline" className="w-full" onClick={() => navigate('/reports')}>
+                <TrendingUp className="mr-2 h-4 w-4" />
+                Generate Report
+              </Button>
+            </motion.div>
+            <motion.div
+              initial={{ y: 10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 1.8, duration: 0.3 }}
+            >
+              <Button variant="outline" className="w-full" onClick={() => navigate('/end-of-day')}>
+                <Calendar className="mr-2 h-4 w-4" />
+                End of Day
               </Button>
             </motion.div>
           </CardContent>

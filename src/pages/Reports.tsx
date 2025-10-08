@@ -14,80 +14,84 @@ import {
   Pie,
   Cell
 } from 'recharts';
-import { Download, Calendar } from 'lucide-react';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { 
+  Download, 
+  Calendar, 
+  TrendingUp, 
+  Package, 
+  Users,
+  FileText
+} from 'lucide-react';
 import { getSheetData } from '@/services/apiService';
 import { formatCurrency } from '@/lib/currency';
 
 export function Reports() {
-  const [dateRange, setDateRange] = useState('last-7-days');
   const [salesData, setSalesData] = useState<any[]>([]);
-  const [categoryData, setCategoryData] = useState<any[]>([]);
+  const [productData, setProductData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchReportData = async () => {
+    const fetchData = async () => {
       try {
         setLoading(true);
         
         // Fetch sales data from Mauzo sheet
-        const salesResponse = await getSheetData('Mauzo', 'A1:J1000'); // Get first 1000 sales records
-        
+        const salesResponse = await getSheetData('Mauzo', 'A1:J100');
         if (salesResponse && salesResponse.data && salesResponse.data.values) {
-          const sales = salesResponse.data.values;
+          const rows = salesResponse.data.values;
           
-          // Process sales data for charts
-          // For simplicity, we'll group by date (first 100 records)
-          const salesByDate: any = {};
-          const categories: any = {};
+          // Process sales data by date
+          const salesByDate: Record<string, { date: string; sales: number; revenue: number }> = {};
           
-          // Skip header row
-          for (let i = 1; i < Math.min(101, sales.length); i++) {
-            const row = sales[i];
-            const date = row[2]; // TAREHE column
-            const category = row[4]; // KUNDI column
-            const amount = parseFloat(row[9].replace('TSh', '').replace(/,/g, '')) || 0; // KIASI column
+          for (let i = 1; i < Math.min(51, rows.length); i++) {
+            const row = rows[i];
+            const date = row[2]; // TAREHE (date)
+            const revenue = parseFloat(row[9]?.replace('TSh', '').replace(/,/g, '')) || 0; // KIASI (amount)
             
-            // Group by date
             if (date) {
               if (!salesByDate[date]) {
-                salesByDate[date] = { sales: 0, revenue: 0 };
+                salesByDate[date] = { date, sales: 1, revenue };
+              } else {
+                salesByDate[date].sales += 1;
+                salesByDate[date].revenue += revenue;
               }
-              salesByDate[date].sales += 1;
-              salesByDate[date].revenue += amount;
-            }
-            
-            // Group by category
-            if (category) {
-              if (!categories[category]) {
-                categories[category] = 0;
-              }
-              categories[category] += amount;
             }
           }
           
-          // Convert to chart format
-          const chartData = Object.entries(salesByDate).map(([date, data]: [string, any]) => ({
-            name: date,
-            sales: data.sales,
-            revenue: data.revenue
-          }));
+          setSalesData(Object.values(salesByDate));
+        }
+        
+        // Fetch product data from Mauzo sheet
+        const productResponse = await getSheetData('Mauzo', 'A1:J100');
+        if (productResponse && productResponse.data && productResponse.data.values) {
+          const rows = productResponse.data.values;
           
-          const categoryChartData = Object.entries(categories).map(([name, value]) => ({
-            name,
-            value: Number(value)
-          })) as { name: string; value: number }[];
+          // Process product data
+          const productSales: Record<string, { name: string; sales: number; revenue: number }> = {};
           
-          setSalesData(chartData.slice(0, 7)); // Last 7 days
-          setCategoryData(categoryChartData);
+          for (let i = 1; i < Math.min(51, rows.length); i++) {
+            const row = rows[i];
+            const productName = row[5]; // BIDHAA (product name)
+            const quantity = parseInt(row[8]) || 0; // IDADI (quantity)
+            const revenue = parseFloat(row[9]?.replace('TSh', '').replace(/,/g, '')) || 0; // KIASI (amount)
+            
+            if (productName) {
+              if (!productSales[productName]) {
+                productSales[productName] = { name: productName, sales: quantity, revenue };
+              } else {
+                productSales[productName].sales += quantity;
+                productSales[productName].revenue += revenue;
+              }
+            }
+          }
+          
+          // Get top 5 products by revenue
+          const sortedProducts = Object.values(productSales)
+            .sort((a, b) => b.revenue - a.revenue)
+            .slice(0, 5);
+          
+          setProductData(sortedProducts);
         }
         
         setError(null);
@@ -100,18 +104,25 @@ export function Reports() {
       }
     };
 
-    fetchReportData();
+    fetchData();
   }, []);
 
-  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'];
+  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
+
+  const reportTypes = [
+    { title: "Sales Summary", description: "Daily sales performance", icon: TrendingUp },
+    { title: "Product Performance", description: "Top selling products", icon: Package },
+    { title: "Customer Analysis", description: "Customer purchasing patterns", icon: Users },
+    { title: "Inventory Report", description: "Stock levels and reorder points", icon: FileText },
+  ];
 
   if (loading) {
     return (
       <div className="space-y-6">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Reports & Analytics</h2>
+          <h2 className="text-2xl font-bold tracking-tight">Reports</h2>
           <p className="text-muted-foreground">
-            Loading reports and analytics...
+            Generating business insights...
           </p>
         </div>
         <Card>
@@ -127,9 +138,9 @@ export function Reports() {
     return (
       <div className="space-y-6">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Reports & Analytics</h2>
+          <h2 className="text-2xl font-bold tracking-tight">Reports</h2>
           <p className="text-muted-foreground">
-            View detailed reports and analytics for your business
+            Business performance analytics
           </p>
         </div>
         <Card>
@@ -144,77 +155,62 @@ export function Reports() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold tracking-tight">Reports & Analytics</h2>
+        <h2 className="text-2xl font-bold tracking-tight">Reports</h2>
         <p className="text-muted-foreground">
-          View detailed reports and analytics for your business
+          Business performance analytics
         </p>
       </div>
 
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h3 className="text-lg font-medium">Sales Overview</h3>
-          <p className="text-sm text-muted-foreground">
-            Summary of your sales performance
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline">
-                <Calendar className="mr-2 h-4 w-4" />
-                {dateRange === 'last-7-days' ? 'Last 7 Days' : 'Last 30 Days'}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Select date range</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onSelect={() => setDateRange('last-7-days')}>
-                Last 7 Days
-              </DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => setDateRange('last-30-days')}>
-                Last 30 Days
-              </DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => setDateRange('last-90-days')}>
-                Last 90 Days
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <Button>
-            <Download className="mr-2 h-4 w-4" />
-            Export
-          </Button>
-        </div>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        {reportTypes.map((report, index) => {
+          const Icon = report.icon;
+          return (
+            <Card key={index}>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  {report.title}
+                </CardTitle>
+                <Icon className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-sm text-muted-foreground">
+                  {report.description}
+                </div>
+                <Button variant="outline" size="sm" className="mt-2 w-full">
+                  <Download className="mr-2 h-4 w-4" />
+                  Generate
+                </Button>
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-6 md:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>Sales Performance</CardTitle>
+            <CardTitle>Daily Sales Performance</CardTitle>
             <CardDescription>
-              Monthly sales and revenue comparison
+              Revenue and transaction volume over time
             </CardDescription>
           </CardHeader>
           <CardContent className="h-80">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={salesData}
-                margin={{
-                  top: 5,
-                  right: 30,
-                  left: 20,
-                  bottom: 5,
-                }}
-              >
+              <BarChart data={salesData}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
+                <XAxis dataKey="date" />
                 <YAxis />
                 <Tooltip 
-                  formatter={(value) => [formatCurrency(Number(value)), 'Revenue']}
-                  labelFormatter={(label) => `Date: ${label}`}
+                  formatter={(value, name) => {
+                    if (name === 'revenue') {
+                      return [formatCurrency(Number(value)), 'Revenue'];
+                    }
+                    return [value, name === 'sales' ? 'Transactions' : name];
+                  }}
                 />
                 <Legend />
-                <Bar dataKey="sales" fill="#8884d8" name="Sales Count" />
-                <Bar dataKey="revenue" fill="#82ca9d" name="Revenue (TSh)" />
+                <Bar dataKey="revenue" name="Revenue" fill="#0088FE" />
+                <Bar dataKey="sales" name="Transactions" fill="#00C49F" />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
@@ -222,31 +218,33 @@ export function Reports() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Customer Categories</CardTitle>
+            <CardTitle>Top Selling Products</CardTitle>
             <CardDescription>
-              Distribution of sales by customer category
+              Revenue contribution by product
             </CardDescription>
           </CardHeader>
           <CardContent className="h-80">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
-                  data={categoryData}
+                  data={productData}
                   cx="50%"
                   cy="50%"
-                  labelLine={false}
+                  labelLine={true}
                   outerRadius={80}
                   fill="#8884d8"
-                  dataKey="value"
-                  label={({ name, percent }) => `${name}: ${(percent as number * 100).toFixed(0)}%`}
+                  dataKey="revenue"
+                  nameKey="name"
+                  label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
                 >
-                  {categoryData.map((_, index) => (
+                  {productData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
                 <Tooltip 
                   formatter={(value) => [formatCurrency(Number(value)), 'Revenue']}
                 />
+                <Legend />
               </PieChart>
             </ResponsiveContainer>
           </CardContent>
@@ -255,28 +253,41 @@ export function Reports() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Top Selling Products</CardTitle>
+          <CardTitle>Report Generation</CardTitle>
           <CardDescription>
-            Your best performing products
+            Create detailed business reports
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {categoryData.slice(0, 5).map((item, index) => (
-              <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
-                <div className="flex items-center space-x-4">
-                  <div className="bg-gray-200 border-2 border-dashed rounded-xl w-16 h-16" />
-                  <div>
-                    <h4 className="font-medium">{item.name}</h4>
-                    <p className="text-sm text-muted-foreground">Category</p>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <p className="font-medium">{formatCurrency(item.value)}</p>
-                  <p className="text-sm text-muted-foreground">{Math.floor(item.value / 1000)} sold</p>
-                </div>
-              </div>
-            ))}
+        <CardContent className="flex flex-col sm:flex-row gap-4">
+          <div className="flex-1">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Button variant="outline">
+                <Calendar className="mr-2 h-4 w-4" />
+                Daily Report
+              </Button>
+              <Button variant="outline">
+                <Calendar className="mr-2 h-4 w-4" />
+                Weekly Report
+              </Button>
+              <Button variant="outline">
+                <Calendar className="mr-2 h-4 w-4" />
+                Monthly Report
+              </Button>
+              <Button variant="outline">
+                <Calendar className="mr-2 h-4 w-4" />
+                Custom Range
+              </Button>
+            </div>
+          </div>
+          <div className="flex flex-col gap-2">
+            <Button>
+              <Download className="mr-2 h-4 w-4" />
+              Export to PDF
+            </Button>
+            <Button variant="outline">
+              <Download className="mr-2 h-4 w-4" />
+              Export to Excel
+            </Button>
           </div>
         </CardContent>
       </Card>

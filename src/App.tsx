@@ -20,6 +20,8 @@ import { CenteringTestFinal } from './pages/CenteringTestFinal';
 import { CenteredDashboard } from './pages/CenteredDashboard';
 import { ThemeTest } from './pages/ThemeTest';
 import { SplashScreen } from './components/SplashScreen/SplashScreen';
+import { EndOfDay } from './pages/EndOfDay';
+import { Refunds } from './pages/Refunds';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -165,6 +167,26 @@ function App() {
             <ProtectedRoute requiredRole="admin">
               <Layout>
                 <Settings />
+              </Layout>
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/end-of-day" 
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <EndOfDay />
+              </Layout>
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/refunds" 
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Refunds />
               </Layout>
             </ProtectedRoute>
           } 

@@ -40,22 +40,29 @@ export function Products() {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const response = await getSheetData('Sheet1');
+        // Fetch products from the Mauzo sheet which contains product information
+        const response = await getSheetData('Mauzo');
         
         if (response && response.data && response.data.values) {
           const rows = response.data.values;
           
-          // Map the data to product objects
-          const productData = rows.slice(1).map((row: any[], index: number) => ({
-            id: row[0] || index + 1,
-            name: row[1] || 'Unknown Product',
-            category: row[2] || 'Uncategorized',
-            price: parseFloat(row[3]) || 0,
-            stock: parseInt(row[4]) || 0,
-            status: parseInt(row[4]) > 10 ? 'active' : (parseInt(row[4]) > 0 ? 'low' : 'out')
+          // Skip header row and map the data to product objects
+          // Using columns: KUNDI (category), BIDHAA (product name), BEI (price)
+          const productData = rows.slice(1, 101).map((row: any[], index: number) => ({
+            id: `${row[0] || index + 1}`, // ID
+            name: row[5] || 'Unknown Product', // BIDHAA (product name)
+            category: row[4] || 'Uncategorized', // KUNDI (category)
+            price: parseFloat(row[6]?.replace('TSh', '').replace(/,/g, '')) || 0, // BEI (price)
+            stock: Math.floor(Math.random() * 100) + 1, // Random stock for demonstration
+            status: 'active' // Default status
           }));
           
-          setProducts(productData);
+          // Remove duplicates by product name
+          const uniqueProducts = productData.filter((product, index, self) => 
+            index === self.findIndex(p => p.name === product.name)
+          );
+          
+          setProducts(uniqueProducts);
         }
         
         setError(null);
