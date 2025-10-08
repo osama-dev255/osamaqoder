@@ -23,6 +23,7 @@ import { SplashScreen } from './components/SplashScreen/SplashScreen';
 import { EndOfDay } from './pages/EndOfDay';
 import { Refunds } from './pages/Refunds';
 import { Inventory } from './pages/Inventory';
+import { Purchases } from './pages/Purchases';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -198,6 +199,16 @@ function App() {
             <ProtectedRoute>
               <Layout>
                 <Inventory />
+              </Layout>
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/purchases" 
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Purchases />
               </Layout>
             </ProtectedRoute>
           } 
