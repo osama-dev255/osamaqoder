@@ -119,22 +119,50 @@
    npm uninstall unused-package
    ```
 
+### 7. TOML Configuration Errors
+
+**Symptoms**:
+- Errors parsing `netlify.toml`
+- Deployment fails immediately with configuration errors
+
+**Solutions**:
+1. **Validate TOML Syntax**: Ensure proper formatting
+   - No extra spaces or malformed inline tables
+   - Correct indentation (TOML is indentation-sensitive)
+   - Proper section headers `[section]` and `[[array-of-tables]]`
+
+2. **Example of Correct netlify.toml**:
+   ```toml
+   [build]
+   command = "npm run build"
+   publish = "dist"
+   environment = { NODE_VERSION = "18" }
+   
+   [build.environment]
+   VITE_BACKEND_URL = "https://google-sheets-rest-api-production.up.railway.app"
+   
+   [[redirects]]
+   from = "/*"
+   to = "/index.html"
+   status = 200
+   ```
+
 ## Netlify-Specific Configuration
 
 ### netlify.toml Configuration
 ```toml
 [build]
-  command = "npm run build"
-  publish = "dist"
-  environment = { NODE_VERSION = "18" }
+command = "npm run build"
+publish = "dist"
+environment = { NODE_VERSION = "18" }
 
 [build.environment]
-  VITE_BACKEND_URL = "https://google-sheets-rest-api-production.up.railway.app"
+VITE_BACKEND_URL = "https://google-sheets-rest-api-production.up.railway.app"
 
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+from = "/*"
+to = "/index.html"
+status = 200
 ```
 
 ### Environment Variables in Netlify
