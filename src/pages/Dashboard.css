@@ -1,0 +1,75 @@
+.dashboard {
+  width: 100%;
+}
+
+.dashboard-section {
+  margin-top: 2rem;
+}
+
+.dashboard-section h3 {
+  margin-top: 0;
+  color: #2c3e50;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 0.5rem;
+}
+
+.spreadsheet-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.info-card {
+  background-color: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border: 1px solid #e9ecef;
+}
+
+.info-card h4 {
+  margin-top: 0;
+  color: #2c3e50;
+}
+
+.sheets-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sheet-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.sheet-item:last-child {
+  border-bottom: none;
+}
+
+.sheet-name {
+  font-weight: 500;
+}
+
+.sheet-details {
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: #6c757d;
+}
+
+.error-message {
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  color: #721c24;
+  padding: 1rem;
+  border-radius: 4px;
+  margin: 1rem 0;
+}

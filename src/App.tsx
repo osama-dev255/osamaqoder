@@ -1,0 +1,152 @@
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Dashboard } from './pages/Dashboard';
+import { Sheets } from './pages/Sheets';
+import { Metadata } from './pages/Metadata';
+import { Products } from './pages/Products';
+import { Sales } from './pages/Sales';
+import { Reports } from './pages/Reports';
+import { Customers } from './pages/Customers';
+import { Settings } from './pages/Settings';
+import { Login } from './pages/Login';
+import { Layout } from './components/Layout';
+import { ProtectedRoute } from './components/ProtectedRoute';
+import { TestStyles } from './TestStyles';
+import { CenteringTest } from './pages/CenteringTest';
+import { CenteringVerification } from './pages/CenteringVerification';
+import { CenteringDebug } from './pages/CenteringDebug';
+import { TailwindTest } from './pages/TailwindTest';
+import { CenteringTestFinal } from './pages/CenteringTestFinal';
+import { CenteredDashboard } from './pages/CenteredDashboard';
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/test-styles" element={<TestStyles />} />
+        <Route path="/centering-test" element={
+          <ProtectedRoute>
+            <Layout>
+              <CenteringTest />
+            </Layout>
+          </ProtectedRoute>
+        } />
+        <Route path="/centering-verification" element={
+          <ProtectedRoute>
+            <Layout>
+              <CenteringVerification />
+            </Layout>
+          </ProtectedRoute>
+        } />
+        <Route path="/centering-debug" element={
+          <ProtectedRoute>
+            <Layout>
+              <CenteringDebug />
+            </Layout>
+          </ProtectedRoute>
+        } />
+        <Route path="/tailwind-test" element={
+          <ProtectedRoute>
+            <Layout>
+              <TailwindTest />
+            </Layout>
+          </ProtectedRoute>
+        } />
+        <Route path="/centering-final" element={
+          <ProtectedRoute>
+            <Layout>
+              <CenteringTestFinal />
+            </Layout>
+          </ProtectedRoute>
+        } />
+        <Route path="/centered-dashboard" element={
+          <ProtectedRoute>
+            <CenteredDashboard />
+          </ProtectedRoute>
+        } />
+        <Route 
+          path="/" 
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Dashboard />
+              </Layout>
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/products" 
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Products />
+              </Layout>
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/sales" 
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Sales />
+              </Layout>
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/sheets" 
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Sheets />
+              </Layout>
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/reports" 
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Reports />
+              </Layout>
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/customers" 
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Customers />
+              </Layout>
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/metadata" 
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Metadata />
+              </Layout>
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/settings" 
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <Layout>
+                <Settings />
+              </Layout>
+            </ProtectedRoute>
+          } 
+        />
+      </Routes>
+    </Router>
+  );
+}
+
+export default App;
