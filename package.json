@@ -13,7 +13,8 @@
     "start": "node server.js",
     "health": "node scripts/health-check.js",
     "deploy-check": "node scripts/check-deployment.js",
-    "verify-netlify": "node scripts/verify-netlify-config.js"
+    "verify-netlify": "node scripts/verify-netlify-config.js",
+    "validate-toml": "node scripts/validate-toml.js"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",
