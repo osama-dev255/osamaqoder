@@ -135,26 +135,26 @@ export function Login() {
             
             <div className="mt-8 pt-6 border-t border-slate-700/50">
               <div className="text-center">
-                <h3 className="text-sm font-medium text-slate-400 mb-3">System Users</h3>
+                <h3 className="text-sm font-medium text-slate-400 mb-3">Demo Credentials</h3>
                 <div className="grid grid-cols-1 gap-3">
                   <div className="bg-slate-700/30 p-3 rounded-lg">
-                    <p className="text-xs text-slate-500">Admin</p>
-                    <p className="text-sm text-slate-300">admin@yourbusiness.com</p>
+                    <p className="text-xs text-slate-500">Administrator</p>
+                    <p className="text-sm text-slate-300">admin@businessproject.co.tz</p>
                   </div>
                   <div className="bg-slate-700/30 p-3 rounded-lg">
-                    <p className="text-xs text-slate-500">Manager</p>
-                    <p className="text-sm text-slate-300">manager@yourbusiness.com</p>
+                    <p className="text-xs text-slate-500">Operations Manager</p>
+                    <p className="text-sm text-slate-300">manager@businessproject.co.tz</p>
                   </div>
                   <div className="bg-slate-700/30 p-3 rounded-lg">
                     <p className="text-xs text-slate-500">Cashier</p>
-                    <p className="text-sm text-slate-300">cashier@yourbusiness.com</p>
+                    <p className="text-sm text-slate-300">cashier@businessproject.co.tz</p>
                   </div>
                 </div>
               </div>
             </div>
             
             <div className="mt-6 text-center text-xs text-slate-500">
-              <p>© 2025 Railway POS. All rights reserved.</p>
+              <p>© 2025 Business Project Tanzania. All rights reserved.</p>
             </div>
           </CardContent>
         </Card>

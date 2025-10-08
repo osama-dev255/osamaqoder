@@ -8,6 +8,7 @@ A professional Point of Sale (POS) system built with React, TypeScript, Tailwind
 - 🎨 **Redesigned Login Page**: Modern glass-morphism design with enhanced UX
 - 🌟 **UI Animations**: Smooth framer-motion animations throughout the application
 - 🚀 **Improved User Experience**: Enhanced transitions and visual feedback
+- 👥 **Enhanced User Management**: Comprehensive user management guide and improved authentication
 
 ## Features
 
@@ -116,6 +117,16 @@ The frontend connects to a Google Sheets REST API backend hosted at:
 - `POST /api/v1/sheets/{sheetName}/append` - Append data to sheet
 - `PUT /api/v1/sheets/{sheetName}/range/{range}` - Update sheet range
 - `DELETE /api/v1/sheets/{sheetName}/clear` - Clear sheet data
+
+## User Management
+
+For detailed information about user management, including:
+- Role-based permissions
+- Adding and modifying users
+- Security best practices
+- Troubleshooting common issues
+
+Please refer to the [User Management Guide](USER_MANAGEMENT_GUIDE.md).
 
 ## Available Scripts
 

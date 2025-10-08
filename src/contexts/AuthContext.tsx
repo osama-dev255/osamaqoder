@@ -39,11 +39,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (response && response.data && response.data.values) {
         const users = response.data.values;
         
+        // Check if we have any users data
+        if (users.length < 2) {
+          throw new Error('No user accounts found. Please contact your system administrator.');
+        }
+        
         // Skip the header row (index 0) and check each user
         for (let i = 1; i < users.length; i++) {
           const [id, name, userEmail, userPassword, role] = users[i];
           
           if (userEmail === email && userPassword === password) {
+            // Validate role
+            if (!['admin', 'manager', 'cashier'].includes(role)) {
+              throw new Error('Invalid user role. Please contact your system administrator.');
+            }
+            
             const userData: User = {
               id,
               name,
@@ -59,13 +69,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
         
         // If we get here, no matching user was found
-        throw new Error('Invalid credentials');
+        throw new Error('Invalid email or password. Please check your credentials and try again.');
       } else {
-        throw new Error('Failed to fetch user data');
+        throw new Error('Unable to connect to authentication service. Please check your internet connection.');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Login error:', error);
-      throw new Error('Invalid credentials');
+      // Provide more specific error messages
+      if (error.message) {
+        throw new Error(error.message);
+      } else {
+        throw new Error('Authentication failed. Please try again or contact your system administrator.');
+      }
     }
   };
 
