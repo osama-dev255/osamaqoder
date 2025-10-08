@@ -25,10 +25,21 @@ To enable GitHub Pages for your repository:
    - Source: Select "GitHub Actions"
 5. Click "Save"
 
+### Setting Main as Default Branch
+
+To set "main" as the default branch:
+
+1. Go to your GitHub repository: https://github.com/osama-dev255/osamaqoder
+2. Click on "Settings" tab
+3. Under "Default branch" section:
+   - Click the "Switch to another branch" button
+   - Select "main" from the dropdown
+   - Click "Update"
+
 ### Triggering Deployment
 
 The deployment will automatically trigger when:
-- You push changes to the `master` branch
+- You push changes to the `main` branch
 - You manually run the workflow from the Actions tab
 
 ### Checking Deployment Status
@@ -69,6 +80,7 @@ The `package.json` file has been updated with:
 1. **Deployment Not Triggering**
    - Ensure GitHub Pages is enabled with "GitHub Actions" as the source
    - Check that the workflow file is in the correct location (`.github/workflows/deploy.yml`)
+   - Verify that "main" is set as the default branch
 
 2. **Application Not Loading**
    - Verify the `homepage` field in `package.json` matches your GitHub Pages URL
@@ -98,7 +110,7 @@ To check build logs:
 
 To update your deployed application:
 1. Make changes to your code
-2. Commit and push to the `master` branch
+2. Commit and push to the `main` branch
 3. The GitHub Actions workflow will automatically deploy the updates
 
 ## Support
