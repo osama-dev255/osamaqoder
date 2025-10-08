@@ -9,8 +9,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Eye, EyeOff, Store } from 'lucide-react';
 
 export function Login() {
-  const [email, setEmail] = useState('admin@example.com');
-  const [password, setPassword] = useState('password');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -135,15 +135,19 @@ export function Login() {
             
             <div className="mt-8 pt-6 border-t border-slate-700/50">
               <div className="text-center">
-                <h3 className="text-sm font-medium text-slate-400 mb-3">Demo Credentials</h3>
-                <div className="grid grid-cols-2 gap-3">
+                <h3 className="text-sm font-medium text-slate-400 mb-3">System Users</h3>
+                <div className="grid grid-cols-1 gap-3">
                   <div className="bg-slate-700/30 p-3 rounded-lg">
-                    <p className="text-xs text-slate-500">Email</p>
-                    <p className="text-sm text-slate-300 truncate">admin@example.com</p>
+                    <p className="text-xs text-slate-500">Admin</p>
+                    <p className="text-sm text-slate-300">admin@yourbusiness.com</p>
                   </div>
                   <div className="bg-slate-700/30 p-3 rounded-lg">
-                    <p className="text-xs text-slate-500">Password</p>
-                    <p className="text-sm text-slate-300">password</p>
+                    <p className="text-xs text-slate-500">Manager</p>
+                    <p className="text-sm text-slate-300">manager@yourbusiness.com</p>
+                  </div>
+                  <div className="bg-slate-700/30 p-3 rounded-lg">
+                    <p className="text-xs text-slate-500">Cashier</p>
+                    <p className="text-sm text-slate-300">cashier@yourbusiness.com</p>
                   </div>
                 </div>
               </div>

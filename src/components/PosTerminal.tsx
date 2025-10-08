@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,6 +20,7 @@ import {
   ShoppingCart
 } from 'lucide-react';
 import { PrintReceipt } from '@/components/PrintReceipt';
+import { getSheetData } from '@/services/apiService';
 
 interface Product {
   id: string;
@@ -36,16 +37,44 @@ interface CartItem {
 export function PosTerminal() {
   const [searchTerm, setSearchTerm] = useState('');
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [taxRate] = useState(8.5);
 
-  // Mock product data
-  const products: Product[] = [
-    { id: '1', name: 'Laptop', price: 1299.99, stock: 25 },
-    { id: '2', name: 'Coffee Mug', price: 12.99, stock: 150 },
-    { id: '3', name: 'Desk Chair', price: 199.99, stock: 8 },
-    { id: '4', name: 'Notebook', price: 4.99, stock: 0 },
-    { id: '5', name: 'Headphones', price: 89.99, stock: 42 },
-  ];
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const response = await getSheetData('Sheet1');
+        
+        if (response && response.data && response.data.values) {
+          const rows = response.data.values;
+          const headers = rows[0];
+          
+          // Map the data to product objects
+          const productData = rows.slice(1).map((row: any[], index: number) => ({
+            id: row[0] || index + 1,
+            name: row[1] || 'Unknown Product',
+            price: parseFloat(row[3]) || 0,
+            stock: parseInt(row[4]) || 0
+          }));
+          
+          setProducts(productData);
+        }
+        
+        setError(null);
+      } catch (err: unknown) {
+        const error = err as Error;
+        setError('Failed to fetch products: ' + (error.message || 'Unknown error'));
+        console.error('Products fetch error:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   const filteredProducts = products.filter(product => 
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -112,6 +141,76 @@ export function PosTerminal() {
     setCart([]);
   };
 
+  if (loading) {
+    return (
+      <div className="grid gap-6 md:grid-cols-3">
+        <div className="md:col-span-2 space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Products</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-center h-64">
+                <div className="text-muted-foreground">Loading products...</div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+        <div className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <ShoppingCart className="h-5 w-5 mr-2" />
+                Shopping Cart
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-center py-8 text-muted-foreground">
+                <ShoppingCart className="h-12 w-12 mx-auto mb-4" />
+                <p>Loading cart...</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="grid gap-6 md:grid-cols-3">
+        <div className="md:col-span-2 space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Products</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-center h-64">
+                <div className="text-red-500">{error}</div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+        <div className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <ShoppingCart className="h-5 w-5 mr-2" />
+                Shopping Cart
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-center py-8 text-muted-foreground">
+                <ShoppingCart className="h-12 w-12 mx-auto mb-4" />
+                <p className="text-red-500">{error}</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="grid gap-6 md:grid-cols-3">
       {/* Product Selection */}
@@ -143,7 +242,7 @@ export function PosTerminal() {
                     <div className="flex justify-between items-start">
                       <div>
                         <h3 className="font-medium">{product.name}</h3>
-                        <p className="text-sm text-muted-foreground">${product.price.toFixed(2)}</p>
+                        <p className="text-sm text-muted-foreground">TSh{product.price.toLocaleString()}</p>
                       </div>
                       <Badge variant={product.stock > 0 ? "default" : "destructive"}>
                         {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
@@ -198,7 +297,7 @@ export function PosTerminal() {
                         <TableCell>
                           <div className="font-medium">{item.product.name}</div>
                           <div className="text-sm text-muted-foreground">
-                            ${item.product.price.toFixed(2)} each
+                            TSh{item.product.price.toLocaleString()} each
                           </div>
                         </TableCell>
                         <TableCell className="text-right">
@@ -221,7 +320,7 @@ export function PosTerminal() {
                           </div>
                         </TableCell>
                         <TableCell className="text-right">
-                          ${(item.product.price * item.quantity).toFixed(2)}
+                          TSh{(item.product.price * item.quantity).toLocaleString()}
                         </TableCell>
                         <TableCell className="text-right">
                           <Button 
@@ -240,15 +339,15 @@ export function PosTerminal() {
                 <div className="mt-4 space-y-2">
                   <div className="flex justify-between">
                     <span>Subtotal:</span>
-                    <span>${subtotal.toFixed(2)}</span>
+                    <span>TSh{subtotal.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Tax ({taxRate}%):</span>
-                    <span>${tax.toFixed(2)}</span>
+                    <span>TSh{tax.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between font-bold text-lg pt-2 border-t">
                     <span>Total:</span>
-                    <span>${total.toFixed(2)}</span>
+                    <span>TSh{total.toLocaleString()}</span>
                   </div>
                 </div>
 

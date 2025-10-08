@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { 
@@ -23,29 +23,122 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-
-// Mock data for charts
-const salesData = [
-  { name: 'Jan', sales: 4000, revenue: 2400 },
-  { name: 'Feb', sales: 3000, revenue: 1398 },
-  { name: 'Mar', sales: 2000, revenue: 9800 },
-  { name: 'Apr', sales: 2780, revenue: 3908 },
-  { name: 'May', sales: 1890, revenue: 4800 },
-  { name: 'Jun', sales: 2390, revenue: 3800 },
-  { name: 'Jul', sales: 3490, revenue: 4300 },
-];
-
-const categoryData = [
-  { name: 'Electronics', value: 400 },
-  { name: 'Clothing', value: 300 },
-  { name: 'Home Goods', value: 300 },
-  { name: 'Books', value: 200 },
-];
-
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+import { getSheetData } from '@/services/apiService';
 
 export function Reports() {
   const [dateRange, setDateRange] = useState('last-7-days');
+  const [salesData, setSalesData] = useState<any[]>([]);
+  const [categoryData, setCategoryData] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchReportData = async () => {
+      try {
+        setLoading(true);
+        
+        // Fetch sales data from Mauzo sheet
+        const salesResponse = await getSheetData('Mauzo', 'A1:J1000'); // Get first 1000 sales records
+        
+        if (salesResponse && salesResponse.data && salesResponse.data.values) {
+          const sales = salesResponse.data.values;
+          
+          // Process sales data for charts
+          // For simplicity, we'll group by date (first 100 records)
+          const salesByDate: any = {};
+          const categories: any = {};
+          
+          // Skip header row
+          for (let i = 1; i < Math.min(101, sales.length); i++) {
+            const row = sales[i];
+            const date = row[2]; // TAREHE column
+            const category = row[4]; // KUNDI column
+            const amount = parseFloat(row[9].replace('TSh', '').replace(/,/g, '')) || 0; // KIASI column
+            
+            // Group by date
+            if (date) {
+              if (!salesByDate[date]) {
+                salesByDate[date] = { sales: 0, revenue: 0 };
+              }
+              salesByDate[date].sales += 1;
+              salesByDate[date].revenue += amount;
+            }
+            
+            // Group by category
+            if (category) {
+              if (!categories[category]) {
+                categories[category] = 0;
+              }
+              categories[category] += amount;
+            }
+          }
+          
+          // Convert to chart format
+          const chartData = Object.entries(salesByDate).map(([date, data]: [string, any]) => ({
+            name: date,
+            sales: data.sales,
+            revenue: data.revenue
+          }));
+          
+          const categoryChartData = Object.entries(categories).map(([name, value]: [string, number]) => ({
+            name,
+            value
+          }));
+          
+          setSalesData(chartData.slice(0, 7)); // Last 7 days
+          setCategoryData(categoryChartData);
+        }
+        
+        setError(null);
+      } catch (err: unknown) {
+        const error = err as Error;
+        setError('Failed to fetch report data: ' + (error.message || 'Unknown error'));
+        console.error('Report data fetch error:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchReportData();
+  }, []);
+
+  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'];
+
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight">Reports & Analytics</h2>
+          <p className="text-muted-foreground">
+            Loading reports and analytics...
+          </p>
+        </div>
+        <Card>
+          <CardContent className="flex items-center justify-center h-64">
+            <div className="text-muted-foreground">Loading report data...</div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight">Reports & Analytics</h2>
+          <p className="text-muted-foreground">
+            View detailed reports and analytics for your business
+          </p>
+        </div>
+        <Card>
+          <CardContent className="flex items-center justify-center h-64">
+            <div className="text-red-500">{error}</div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -114,10 +207,13 @@ export function Reports() {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" />
                 <YAxis />
-                <Tooltip />
+                <Tooltip 
+                  formatter={(value) => [`TSh${Number(value).toLocaleString()}`, 'Revenue']}
+                  labelFormatter={(label) => `Date: ${label}`}
+                />
                 <Legend />
                 <Bar dataKey="sales" fill="#8884d8" name="Sales Count" />
-                <Bar dataKey="revenue" fill="#82ca9d" name="Revenue ($)" />
+                <Bar dataKey="revenue" fill="#82ca9d" name="Revenue (TSh)" />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
@@ -125,9 +221,9 @@ export function Reports() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Product Categories</CardTitle>
+            <CardTitle>Customer Categories</CardTitle>
             <CardDescription>
-              Distribution of sales by category
+              Distribution of sales by customer category
             </CardDescription>
           </CardHeader>
           <CardContent className="h-80">
@@ -147,7 +243,9 @@ export function Reports() {
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip />
+                <Tooltip 
+                  formatter={(value) => [`TSh${Number(value).toLocaleString()}`, 'Revenue']}
+                />
               </PieChart>
             </ResponsiveContainer>
           </CardContent>
@@ -163,18 +261,18 @@ export function Reports() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {[1, 2, 3, 4, 5].map((item) => (
-              <div key={item} className="flex items-center justify-between p-4 border rounded-lg">
+            {categoryData.slice(0, 5).map((item, index) => (
+              <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
                 <div className="flex items-center space-x-4">
                   <div className="bg-gray-200 border-2 border-dashed rounded-xl w-16 h-16" />
                   <div>
-                    <h4 className="font-medium">Product {item}</h4>
-                    <p className="text-sm text-muted-foreground">Category {item}</p>
+                    <h4 className="font-medium">{item.name}</h4>
+                    <p className="text-sm text-muted-foreground">Category</p>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="font-medium">${(item * 99.99).toFixed(2)}</p>
-                  <p className="text-sm text-muted-foreground">{item * 10} sold</p>
+                  <p className="font-medium">TSh{item.value.toLocaleString()}</p>
+                  <p className="text-sm text-muted-foreground">{Math.floor(item.value / 1000)} sold</p>
                 </div>
               </div>
             ))}

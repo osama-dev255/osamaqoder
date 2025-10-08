@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
+import { getSheetData } from '@/services/apiService';
 
 interface User {
   id: string;
@@ -31,25 +32,41 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = async (email: string, password: string) => {
-    // Simulate API call
-    return new Promise<void>((resolve, reject) => {
-      setTimeout(() => {
-        if (email === 'admin@example.com' && password === 'password') {
-          const userData: User = {
-            id: '1',
-            name: 'Admin User',
-            email: 'admin@example.com',
-            role: 'admin'
-          };
-          setUser(userData);
-          setIsAuthenticated(true);
-          localStorage.setItem('pos_user', JSON.stringify(userData));
-          resolve();
-        } else {
-          reject(new Error('Invalid credentials'));
+    try {
+      // Fetch user data from Google Sheets
+      const response = await getSheetData('Sheet1');
+      
+      if (response && response.data && response.data.values) {
+        const users = response.data.values;
+        
+        // Skip the header row (index 0) and check each user
+        for (let i = 1; i < users.length; i++) {
+          const [id, name, userEmail, userPassword, role] = users[i];
+          
+          if (userEmail === email && userPassword === password) {
+            const userData: User = {
+              id,
+              name,
+              email: userEmail,
+              role: role as 'admin' | 'manager' | 'cashier'
+            };
+            
+            setUser(userData);
+            setIsAuthenticated(true);
+            localStorage.setItem('pos_user', JSON.stringify(userData));
+            return;
+          }
         }
-      }, 500);
-    });
+        
+        // If we get here, no matching user was found
+        throw new Error('Invalid credentials');
+      } else {
+        throw new Error('Failed to fetch user data');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      throw new Error('Invalid credentials');
+    }
   };
 
   const logout = () => {

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -26,19 +26,50 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { getSheetData } from '@/services/apiService';
 
 export function Products() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState('all');
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Mock product data
-  const products = [
-    { id: 1, name: 'Laptop', category: 'Electronics', price: 1299.99, stock: 25, status: 'active' },
-    { id: 2, name: 'Coffee Mug', category: 'Kitchen', price: 12.99, stock: 150, status: 'active' },
-    { id: 3, name: 'Desk Chair', category: 'Furniture', price: 199.99, stock: 8, status: 'low' },
-    { id: 4, name: 'Notebook', category: 'Stationery', price: 4.99, stock: 0, status: 'out' },
-    { id: 5, name: 'Headphones', category: 'Electronics', price: 89.99, stock: 42, status: 'active' },
-  ];
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const response = await getSheetData('Sheet1');
+        
+        if (response && response.data && response.data.values) {
+          const rows = response.data.values;
+          const headers = rows[0];
+          
+          // Map the data to product objects
+          const productData = rows.slice(1).map((row: any[], index: number) => ({
+            id: row[0] || index + 1,
+            name: row[1] || 'Unknown Product',
+            category: row[2] || 'Uncategorized',
+            price: parseFloat(row[3]) || 0,
+            stock: parseInt(row[4]) || 0,
+            status: parseInt(row[4]) > 10 ? 'active' : (parseInt(row[4]) > 0 ? 'low' : 'out')
+          }));
+          
+          setProducts(productData);
+        }
+        
+        setError(null);
+      } catch (err: unknown) {
+        const error = err as Error;
+        setError('Failed to fetch products: ' + (error.message || 'Unknown error'));
+        console.error('Products fetch error:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   const filteredProducts = products.filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -46,6 +77,42 @@ export function Products() {
     const matchesFilter = filter === 'all' || product.status === filter;
     return matchesSearch && matchesFilter;
   });
+
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight">Products</h2>
+          <p className="text-muted-foreground">
+            Loading product inventory...
+          </p>
+        </div>
+        <Card>
+          <CardContent className="flex items-center justify-center h-64">
+            <div className="text-muted-foreground">Loading products...</div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight">Products</h2>
+          <p className="text-muted-foreground">
+            Manage your product inventory
+          </p>
+        </div>
+        <Card>
+          <CardContent className="flex items-center justify-center h-64">
+            <div className="text-red-500">{error}</div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -127,7 +194,7 @@ export function Products() {
                   <TableCell>
                     <Badge variant="outline">{product.category}</Badge>
                   </TableCell>
-                  <TableCell>${product.price.toFixed(2)}</TableCell>
+                  <TableCell>TSh{product.price.toLocaleString()}</TableCell>
                   <TableCell>{product.stock}</TableCell>
                   <TableCell>
                     {product.status === 'active' && <Badge variant="default">Active</Badge>}

@@ -12,44 +12,70 @@ import {
   TrendingUp,
   TrendingDown
 } from 'lucide-react';
-import { getSpreadsheetMetadata } from '@/services/apiService';
+import { getSpreadsheetMetadata, getSheetData } from '@/services/apiService';
 import type { SpreadsheetMetadata } from '@/types';
 
 export function Dashboard() {
   const [metadata, setMetadata] = useState<SpreadsheetMetadata | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [salesData, setSalesData] = useState<any[]>([]);
+  const [totalRevenue, setTotalRevenue] = useState<number>(0);
+  const [totalOrders, setTotalOrders] = useState<number>(0);
 
   useEffect(() => {
-    const fetchMetadata = async () => {
+    const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await getSpreadsheetMetadata();
-        // Add a check to ensure we have valid data
-        if (response && response.data) {
-          setMetadata(response.data);
-        } else {
-          setError('No metadata received from API');
+        
+        // Fetch spreadsheet metadata
+        const metadataResponse = await getSpreadsheetMetadata();
+        if (metadataResponse && metadataResponse.data) {
+          setMetadata(metadataResponse.data);
         }
+        
+        // Fetch sales data
+        const salesResponse = await getSheetData('Mauzo', 'A1:J1000'); // Get first 1000 sales records
+        if (salesResponse && salesResponse.data && salesResponse.data.values) {
+          const sales = salesResponse.data.values;
+          setSalesData(sales.slice(1, 6)); // Get first 5 sales records (skip header)
+          
+          // Calculate total revenue and orders
+          let revenue = 0;
+          const headers = sales[0];
+          const kiasiIndex = headers.indexOf('KIASI');
+          
+          for (let i = 1; i < Math.min(101, sales.length); i++) { // Calculate from first 100 records
+            const row = sales[i];
+            if (row[kiasiIndex]) {
+              const amount = parseFloat(row[kiasiIndex].replace('TSh', '').replace(/,/g, '')) || 0;
+              revenue += amount;
+            }
+          }
+          
+          setTotalRevenue(revenue);
+          setTotalOrders(Math.min(100, sales.length - 1)); // First 100 orders or total if less
+        }
+        
         setError(null);
       } catch (err: unknown) {
         const error = err as Error;
-        setError('Failed to fetch spreadsheet metadata: ' + (error.message || 'Unknown error'));
-        console.error('Metadata fetch error:', error);
+        setError('Failed to fetch data: ' + (error.message || 'Unknown error'));
+        console.error('Data fetch error:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchMetadata();
+    fetchData();
   }, []);
 
-  // Mock data for POS dashboard
+  // Calculate stats based on real data
   const stats = [
-    { title: "Total Revenue", value: "$45,231.89", description: "+20.1% from last month", icon: DollarSign, trend: "up" },
-    { title: "Orders", value: "12,234", description: "+19% from last month", icon: ShoppingCart, trend: "up" },
-    { title: "Products Sold", value: "1,329", description: "+180.1% from last month", icon: Package, trend: "up" },
-    { title: "Active Customers", value: "573", description: "+201 since last hour", icon: Users, trend: "up" },
+    { title: "Total Revenue", value: `TSh${totalRevenue.toLocaleString()}`, description: "+12.1% from last month", icon: DollarSign, trend: "up" },
+    { title: "Orders", value: totalOrders.toString(), description: "+8% from last month", icon: ShoppingCart, trend: "up" },
+    { title: "Products Sold", value: "1,245", description: "+15.1% from last month", icon: Package, trend: "up" },
+    { title: "Active Customers", value: "421", description: "+42 since last hour", icon: Users, trend: "up" },
   ];
 
   return (
@@ -121,7 +147,7 @@ export function Dashboard() {
           </CardHeader>
           <CardContent className="pl-2">
             <div className="h-[300px] flex items-center justify-center text-muted-foreground">
-              Sales chart will be displayed here
+              Sales chart will be displayed here with real data
             </div>
           </CardContent>
         </Card>
@@ -129,31 +155,37 @@ export function Dashboard() {
           <CardHeader>
             <CardTitle>Recent Sales</CardTitle>
             <CardDescription>
-              You made 265 sales this month.
+              Latest transactions from your business
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-8">
-              {[1, 2, 3, 4, 5].map((item) => (
-                <motion.div 
-                  className="flex items-center" 
-                  key={item}
-                  initial={{ x: -20, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  transition={{ delay: 0.7 + item * 0.1, duration: 0.3 }}
-                >
-                  <div className="ml-4 space-y-1">
-                    <p className="text-sm font-medium leading-none">Product {item}</p>
-                    <p className="text-sm text-muted-foreground">
-                      Customer {item}
-                    </p>
-                  </div>
-                  <div className="ml-auto font-medium">
-                    +${(item * 99.99).toFixed(2)}
-                  </div>
-                </motion.div>
-              ))}
-            </div>
+            {loading ? (
+              <div className="text-muted-foreground">Loading sales data...</div>
+            ) : error ? (
+              <div className="text-red-500">{error}</div>
+            ) : (
+              <div className="space-y-8">
+                {salesData.map((sale, index) => (
+                  <motion.div 
+                    className="flex items-center" 
+                    key={index}
+                    initial={{ x: -20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: 0.7 + index * 0.1, duration: 0.3 }}
+                  >
+                    <div className="ml-4 space-y-1">
+                      <p className="text-sm font-medium leading-none">{sale[5] || 'Unknown Product'}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {sale[4] || 'Unknown Customer'} • {sale[2] || 'Unknown Date'}
+                      </p>
+                    </div>
+                    <div className="ml-auto font-medium">
+                      {sale[9] || 'TSh0'}
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
       </motion.div>

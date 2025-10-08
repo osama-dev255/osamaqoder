@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -27,19 +27,51 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { getSheetData } from '@/services/apiService';
 
 export function Customers() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState('all');
+  const [customers, setCustomers] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Mock customer data
-  const customers = [
-    { id: 1, name: 'John Doe', email: 'john@example.com', phone: '+1 (555) 123-4567', totalSpent: 1299.99, orders: 3, status: 'active' },
-    { id: 2, name: 'Jane Smith', email: 'jane@example.com', phone: '+1 (555) 987-6543', totalSpent: 89.99, orders: 1, status: 'active' },
-    { id: 3, name: 'Bob Johnson', email: 'bob@example.com', phone: '+1 (555) 456-7890', totalSpent: 212.97, orders: 2, status: 'inactive' },
-    { id: 4, name: 'Alice Brown', email: 'alice@example.com', phone: '+1 (555) 234-5678', totalSpent: 4.99, orders: 1, status: 'active' },
-    { id: 5, name: 'Charlie Wilson', email: 'charlie@example.com', phone: '+1 (555) 876-5432', totalSpent: 199.99, orders: 1, status: 'inactive' },
-  ];
+  useEffect(() => {
+    const fetchCustomers = async () => {
+      try {
+        setLoading(true);
+        const response = await getSheetData('Sheet1');
+        
+        if (response && response.data && response.data.values) {
+          const rows = response.data.values;
+          const headers = rows[0];
+          
+          // Map the data to customer objects
+          const customerData = rows.slice(1).map((row: any[], index: number) => ({
+            id: row[0] || index + 1,
+            name: row[1] || 'Unknown Customer',
+            email: row[2] || 'No Email',
+            phone: row[3] || 'No Phone',
+            totalSpent: parseFloat(row[4]) || 0,
+            orders: parseInt(row[5]) || 0,
+            status: row[6] || 'active'
+          }));
+          
+          setCustomers(customerData);
+        }
+        
+        setError(null);
+      } catch (err: unknown) {
+        const error = err as Error;
+        setError('Failed to fetch customers: ' + (error.message || 'Unknown error'));
+        console.error('Customers fetch error:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCustomers();
+  }, []);
 
   const filteredCustomers = customers.filter(customer => {
     const matchesSearch = customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -48,6 +80,42 @@ export function Customers() {
     const matchesFilter = filter === 'all' || customer.status === filter;
     return matchesSearch && matchesFilter;
   });
+
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight">Customers</h2>
+          <p className="text-muted-foreground">
+            Loading customer database...
+          </p>
+        </div>
+        <Card>
+          <CardContent className="flex items-center justify-center h-64">
+            <div className="text-muted-foreground">Loading customers...</div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight">Customers</h2>
+          <p className="text-muted-foreground">
+            Manage your customer database
+          </p>
+        </div>
+        <Card>
+          <CardContent className="flex items-center justify-center h-64">
+            <div className="text-red-500">{error}</div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -134,7 +202,7 @@ export function Customers() {
                   <TableCell>
                     <div className="text-sm">{customer.phone}</div>
                   </TableCell>
-                  <TableCell>${customer.totalSpent.toFixed(2)}</TableCell>
+                  <TableCell>TSh{customer.totalSpent.toLocaleString()}</TableCell>
                   <TableCell>{customer.orders}</TableCell>
                   <TableCell>
                     {customer.status === 'active' && <Badge variant="default">Active</Badge>}
