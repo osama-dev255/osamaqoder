@@ -16,14 +16,24 @@ export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) 
   }
 
   // Check role-based access if requiredRole is specified
-  if (requiredRole && user?.role !== 'admin') {
-    // Admins can access everything, other roles have restrictions
-    if (requiredRole === 'manager' && user?.role !== 'manager') {
-      return <Navigate to="/" replace />;
+  if (requiredRole && user?.role) {
+    // Admins can access everything
+    if (user.role === 'admin') {
+      return <>{children}</>;
     }
-    if (requiredRole === 'cashier' && user?.role !== 'cashier' && user?.role !== 'manager') {
-      return <Navigate to="/" replace />;
+    
+    // Managers can access manager and cashier areas
+    if (requiredRole === 'manager' && user.role === 'manager') {
+      return <>{children}</>;
     }
+    
+    // Cashiers can only access cashier areas
+    if (requiredRole === 'cashier' && user.role === 'cashier') {
+      return <>{children}</>;
+    }
+    
+    // If we get here, the user doesn't have the required role
+    return <Navigate to="/" replace />;
   }
 
   return <>{children}</>;

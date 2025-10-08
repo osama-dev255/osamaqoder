@@ -74,6 +74,11 @@ export function Dashboard() {
     fetchData();
   }, []);
 
+  const handleNavigation = (path: string) => {
+    console.log('Navigating to:', path);
+    navigate(path);
+  };
+
   // Calculate stats based on real data
   const stats = [
     { title: "Total Revenue", value: formatCurrency(totalRevenue), description: "+12.1% from last month", icon: DollarSign, trend: "up" },
@@ -262,7 +267,7 @@ export function Dashboard() {
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 1.3, duration: 0.3 }}
             >
-              <Button className="w-full" onClick={() => navigate('/sales')}>
+              <Button className="w-full" onClick={() => handleNavigation('/sales')}>
                 <ShoppingCart className="mr-2 h-4 w-4" />
                 New Sale
               </Button>
@@ -272,7 +277,7 @@ export function Dashboard() {
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 1.4, duration: 0.3 }}
             >
-              <Button variant="outline" className="w-full" onClick={() => navigate('/products')}>
+              <Button variant="outline" className="w-full" onClick={() => handleNavigation('/products')}>
                 <Package className="mr-2 h-4 w-4" />
                 Add Product
               </Button>
@@ -282,7 +287,7 @@ export function Dashboard() {
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 1.5, duration: 0.3 }}
             >
-              <Button variant="outline" className="w-full" onClick={() => navigate('/customers')}>
+              <Button variant="outline" className="w-full" onClick={() => handleNavigation('/customers')}>
                 <Users className="mr-2 h-4 w-4" />
                 Add Customer
               </Button>
@@ -292,7 +297,7 @@ export function Dashboard() {
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 1.6, duration: 0.3 }}
             >
-              <Button variant="outline" className="w-full" onClick={() => navigate('/refunds')}>
+              <Button variant="outline" className="w-full" onClick={() => handleNavigation('/refunds')}>
                 <CreditCard className="mr-2 h-4 w-4" />
                 Process Refund
               </Button>
@@ -302,7 +307,7 @@ export function Dashboard() {
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 1.7, duration: 0.3 }}
             >
-              <Button variant="outline" className="w-full" onClick={() => navigate('/reports')}>
+              <Button variant="outline" className="w-full" onClick={() => handleNavigation('/reports')}>
                 <TrendingUp className="mr-2 h-4 w-4" />
                 Generate Report
               </Button>
@@ -312,7 +317,7 @@ export function Dashboard() {
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 1.8, duration: 0.3 }}
             >
-              <Button variant="outline" className="w-full" onClick={() => navigate('/end-of-day')}>
+              <Button variant="outline" className="w-full" onClick={() => handleNavigation('/end-of-day')}>
                 <Calendar className="mr-2 h-4 w-4" />
                 End of Day
               </Button>
