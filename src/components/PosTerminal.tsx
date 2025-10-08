@@ -47,28 +47,69 @@ export function PosTerminal() {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        // Fetch products from the Mauzo sheet which contains product information
-        const response = await getSheetData('Mauzo');
+        // Fetch products from the dedicated Products sheet
+        const response = await getSheetData('Products');
         
         if (response && response.data && response.data.values) {
           const rows = response.data.values;
           
-          // Skip header row and map the data to product objects
-          // Using columns: KUNDI (category), BIDHAA (product name), BEI (price)
-          const productData = rows.slice(1, 51).map((row: any[], index: number) => ({
-            id: `${row[0] || index + 1}`, // ID
-            name: row[5] || 'Unknown Product', // BIDHAA (product name)
-            price: parseFloat(row[6]?.replace('TSh', '').replace(/,/g, '')) || 0, // BEI (price)
-            stock: 100, // Default stock value for demonstration
-            category: row[4] || 'Uncategorized' // KUNDI (category)
-          }));
-          
-          // Remove duplicates by product name
-          const uniqueProducts = productData.filter((product: any, index: number, self: any[]) => 
-            index === self.findIndex((p: any) => p.name === product.name)
-          );
-          
-          setProducts(uniqueProducts);
+          // If the sheet is empty, initialize with sample data
+          if (rows.length === 0) {
+            const productData = [
+              {
+                id: '1',
+                name: 'COKE 600MLS 12S/W NP',
+                price: 9700,
+                stock: 100,
+                category: 'PET'
+              }
+            ];
+            setProducts(productData);
+          } else {
+            // Skip header row and map the data to product objects
+            const productData = rows.slice(1).map((row: any[], index: number) => ({
+              id: row[0] || `${index + 1}`, // ID
+              name: row[1] || 'Unknown Product', // Product Name
+              price: parseFloat(row[3]) || 0, // Price
+              stock: parseInt(row[4]) || 0, // Stock Quantity
+              category: row[2] || 'Uncategorized' // Category
+            }));
+            
+            setProducts(productData);
+          }
+        } else {
+          // Initialize with sample data if no data is returned
+          const sampleProducts = [
+            {
+              id: '1',
+              name: 'COKE 600MLS 12S/W NP',
+              price: 9700,
+              stock: 100,
+              category: 'PET'
+            },
+            {
+              id: '2',
+              name: 'SPRITE 600ML 12 S/W NP',
+              price: 9700,
+              stock: 85,
+              category: 'PET'
+            },
+            {
+              id: '3',
+              name: 'SPAR PINENUT 350ML 24 RB',
+              price: 12800,
+              stock: 42,
+              category: 'RGB'
+            },
+            {
+              id: '4',
+              name: 'SPRITE 350MLS CR24 RB',
+              price: 12800,
+              stock: 28,
+              category: 'RGB'
+            }
+          ];
+          setProducts(sampleProducts);
         }
         
         setError(null);

@@ -38,13 +38,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
   const navigation = [
     { name: 'Dashboard', href: '/', icon: Home },
     { name: 'Products', href: '/products', icon: Package },
+    { name: 'Inventory', href: '/inventory', icon: Database },
     { name: 'Sales', href: '/sales', icon: ShoppingCart },
     { name: 'Customers', href: '/customers', icon: Users },
     { name: 'Refunds', href: '/refunds', icon: CreditCard },
     { name: 'Reports', href: '/reports', icon: BarChart3 },
     { name: 'End of Day', href: '/end-of-day', icon: Calendar },
-    { name: 'Sheets', href: '/sheets', icon: Database },
-    { name: 'Metadata', href: '/metadata', icon: FileText },
+    { name: 'Sheets', href: '/sheets', icon: FileText },
+    { name: 'Metadata', href: '/metadata', icon: Database },
     { name: 'Settings', href: '/settings', icon: Settings },
   ];
 

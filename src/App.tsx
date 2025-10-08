@@ -22,6 +22,7 @@ import { ThemeTest } from './pages/ThemeTest';
 import { SplashScreen } from './components/SplashScreen/SplashScreen';
 import { EndOfDay } from './pages/EndOfDay';
 import { Refunds } from './pages/Refunds';
+import { Inventory } from './pages/Inventory';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -187,6 +188,16 @@ function App() {
             <ProtectedRoute>
               <Layout>
                 <Refunds />
+              </Layout>
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/inventory" 
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Inventory />
               </Layout>
             </ProtectedRoute>
           } 
