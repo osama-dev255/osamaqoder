@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -32,70 +33,128 @@ export function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <div className="flex justify-center mb-4">
-            <div className="bg-gray-200 border-2 border-dashed rounded-xl w-16 h-16 flex items-center justify-center">
-              <Store className="h-8 w-8 text-gray-500" />
-            </div>
-          </div>
-          <CardTitle className="text-2xl">POS System Login</CardTitle>
-          <CardDescription>
-            Enter your credentials to access your account
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-900 via-purple-900 to-slate-900 p-4">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="w-full max-w-md"
+      >
+        <Card className="w-full bg-slate-800/50 backdrop-blur-lg border-slate-700 shadow-2xl shadow-indigo-500/10">
+          <CardHeader className="text-center pb-6">
+            <motion.div 
+              className="flex justify-center mb-6"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+            >
               <div className="relative">
-                <Input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-                <button
-                  type="button"
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                  onClick={() => setShowPassword(!showPassword)}
+                <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-2xl blur-lg opacity-75"></div>
+                <div className="relative bg-slate-800 border-2 border-slate-700 rounded-2xl w-20 h-20 flex items-center justify-center">
+                  <Store className="h-10 w-10 text-indigo-400" />
+                </div>
+              </div>
+            </motion.div>
+            <CardTitle className="text-3xl font-bold bg-gradient-to-r from-indigo-300 to-purple-300 bg-clip-text text-transparent">
+              Railway POS
+            </CardTitle>
+            <CardDescription className="text-slate-400 mt-2">
+              Professional Point of Sale System
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="email" className="text-slate-300">Email Address</Label>
+                  <div className="relative">
+                    <Input
+                      id="email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      className="bg-slate-700/50 border-slate-600 text-slate-100 placeholder-slate-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                      placeholder="Enter your email"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="password" className="text-slate-300">Password</Label>
+                  <div className="relative">
+                    <Input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                      className="bg-slate-700/50 border-slate-600 text-slate-100 placeholder-slate-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 pr-10"
+                      placeholder="Enter your password"
+                    />
+                    <button
+                      type="button"
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-5 w-5 text-slate-400 hover:text-slate-300" />
+                      ) : (
+                        <Eye className="h-5 w-5 text-slate-400 hover:text-slate-300" />
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </div>
+              
+              {error && (
+                <motion.div 
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-sm text-red-400 bg-red-900/30 p-3 rounded-lg border border-red-800/50"
                 >
-                  {showPassword ? (
-                    <EyeOff className="h-4 w-4 text-gray-500" />
-                  ) : (
-                    <Eye className="h-4 w-4 text-gray-500" />
-                  )}
-                </button>
+                  {error}
+                </motion.div>
+              )}
+              
+              <Button 
+                type="submit" 
+                className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-medium py-6 rounded-lg transition-all duration-300 shadow-lg hover:shadow-indigo-500/20"
+                disabled={loading}
+              >
+                {loading ? (
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                    className="h-5 w-5 border-2 border-white border-t-transparent rounded-full"
+                  />
+                ) : (
+                  'Sign In to Dashboard'
+                )}
+              </Button>
+            </form>
+            
+            <div className="mt-8 pt-6 border-t border-slate-700/50">
+              <div className="text-center">
+                <h3 className="text-sm font-medium text-slate-400 mb-3">Demo Credentials</h3>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-slate-700/30 p-3 rounded-lg">
+                    <p className="text-xs text-slate-500">Email</p>
+                    <p className="text-sm text-slate-300 truncate">admin@example.com</p>
+                  </div>
+                  <div className="bg-slate-700/30 p-3 rounded-lg">
+                    <p className="text-xs text-slate-500">Password</p>
+                    <p className="text-sm text-slate-300">password</p>
+                  </div>
+                </div>
               </div>
             </div>
-            {error && (
-              <div className="text-sm text-red-500 bg-red-50 p-2 rounded">
-                {error}
-              </div>
-            )}
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Signing in...' : 'Sign In'}
-            </Button>
-          </form>
-          <div className="mt-4 text-center text-sm text-muted-foreground">
-            <p>Demo credentials:</p>
-            <p>Email: admin@example.com</p>
-            <p>Password: password</p>
-          </div>
-        </CardContent>
-      </Card>
+            
+            <div className="mt-6 text-center text-xs text-slate-500">
+              <p>© 2025 Railway POS. All rights reserved.</p>
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
     </div>
   );
 }

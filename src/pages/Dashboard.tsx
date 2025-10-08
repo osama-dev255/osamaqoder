@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -52,42 +53,68 @@ export function Dashboard() {
   ];
 
   return (
-    <div className="space-y-6">
-      <div>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="space-y-6"
+    >
+      <motion.div
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
         <h2 className="text-2xl font-bold tracking-tight">Dashboard</h2>
         <p className="text-muted-foreground">
           Welcome to your Point of Sale system dashboard
         </p>
-      </div>
+      </motion.div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <motion.div 
+        className="grid gap-4 md:grid-cols-2 lg:grid-cols-4"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.1, duration: 0.5 }}
+      >
         {stats.map((stat, index) => {
           const Icon = stat.icon;
           return (
-            <Card key={index}>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  {stat.title}
-                </CardTitle>
-                <Icon className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{stat.value}</div>
-                <p className="text-xs text-muted-foreground flex items-center">
-                  {stat.trend === "up" ? (
-                    <TrendingUp className="h-3 w-3 mr-1 text-green-500" />
-                  ) : (
-                    <TrendingDown className="h-3 w-3 mr-1 text-red-500" />
-                  )}
-                  {stat.description}
-                </p>
-              </CardContent>
-            </Card>
+            <motion.div
+              key={index}
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.1 * index + 0.2, duration: 0.5 }}
+            >
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    {stat.title}
+                  </CardTitle>
+                  <Icon className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{stat.value}</div>
+                  <p className="text-xs text-muted-foreground flex items-center">
+                    {stat.trend === "up" ? (
+                      <TrendingUp className="h-3 w-3 mr-1 text-green-500" />
+                    ) : (
+                      <TrendingDown className="h-3 w-3 mr-1 text-red-500" />
+                    )}
+                    {stat.description}
+                  </p>
+                </CardContent>
+              </Card>
+            </motion.div>
           );
         })}
-      </div>
+      </motion.div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+      <motion.div 
+        className="grid gap-4 md:grid-cols-2 lg:grid-cols-7"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.6, duration: 0.5 }}
+      >
         <Card className="col-span-4">
           <CardHeader>
             <CardTitle>Overview</CardTitle>
@@ -108,7 +135,13 @@ export function Dashboard() {
           <CardContent>
             <div className="space-y-8">
               {[1, 2, 3, 4, 5].map((item) => (
-                <div className="flex items-center" key={item}>
+                <motion.div 
+                  className="flex items-center" 
+                  key={item}
+                  initial={{ x: -20, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ delay: 0.7 + item * 0.1, duration: 0.3 }}
+                >
                   <div className="ml-4 space-y-1">
                     <p className="text-sm font-medium leading-none">Product {item}</p>
                     <p className="text-sm text-muted-foreground">
@@ -118,14 +151,19 @@ export function Dashboard() {
                   <div className="ml-auto font-medium">
                     +${(item * 99.99).toFixed(2)}
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </CardContent>
         </Card>
-      </div>
+      </motion.div>
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <motion.div 
+        className="grid gap-4 md:grid-cols-2"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.2, duration: 0.5 }}
+      >
         <Card>
           <CardHeader>
             <CardTitle>Spreadsheet Information</CardTitle>
@@ -136,7 +174,12 @@ export function Dashboard() {
             {error && <div className="text-red-500">{error}</div>}
               
             {metadata && !loading && (
-              <div className="space-y-4">
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="space-y-4"
+              >
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="font-medium">Spreadsheet Details</h3>
@@ -150,19 +193,25 @@ export function Dashboard() {
                   {metadata.sheets && metadata.sheets.length > 0 ? (
                     <div className="grid gap-2">
                       {metadata.sheets.map((sheet, index) => (
-                        <div key={sheet.sheetId || index} className="flex items-center justify-between p-2 bg-muted rounded-md">
+                        <motion.div
+                          key={sheet.sheetId || index}
+                          initial={{ x: -10, opacity: 0 }}
+                          animate={{ x: 0, opacity: 1 }}
+                          transition={{ delay: index * 0.1, duration: 0.3 }}
+                          className="flex items-center justify-between p-2 bg-muted rounded-md"
+                        >
                           <span className="text-sm font-medium">{sheet.title || 'Untitled Sheet'}</span>
                           <span className="text-xs text-muted-foreground">
                             {sheet.gridProperties?.rowCount || 0} × {sheet.gridProperties?.columnCount || 0}
                           </span>
-                        </div>
+                        </motion.div>
                       ))}
                     </div>
                   ) : (
                     <p className="text-sm text-muted-foreground">No sheets found</p>
                   )}
                 </div>
-              </div>
+              </motion.div>
             )}
           </CardContent>
         </Card>
@@ -172,25 +221,49 @@ export function Dashboard() {
             <CardTitle>Quick Actions</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-4">
-            <Button className="w-full">
-              <ShoppingCart className="mr-2 h-4 w-4" />
-              New Sale
-            </Button>
-            <Button variant="outline" className="w-full">
-              <Package className="mr-2 h-4 w-4" />
-              Add Product
-            </Button>
-            <Button variant="outline" className="w-full">
-              <Users className="mr-2 h-4 w-4" />
-              Add Customer
-            </Button>
-            <Button variant="outline" className="w-full">
-              <CreditCard className="mr-2 h-4 w-4" />
-              Process Payment
-            </Button>
+            <motion.div
+              initial={{ y: 10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 1.3, duration: 0.3 }}
+            >
+              <Button className="w-full">
+                <ShoppingCart className="mr-2 h-4 w-4" />
+                New Sale
+              </Button>
+            </motion.div>
+            <motion.div
+              initial={{ y: 10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 1.4, duration: 0.3 }}
+            >
+              <Button variant="outline" className="w-full">
+                <Package className="mr-2 h-4 w-4" />
+                Add Product
+              </Button>
+            </motion.div>
+            <motion.div
+              initial={{ y: 10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 1.5, duration: 0.3 }}
+            >
+              <Button variant="outline" className="w-full">
+                <Users className="mr-2 h-4 w-4" />
+                Add Customer
+              </Button>
+            </motion.div>
+            <motion.div
+              initial={{ y: 10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 1.6, duration: 0.3 }}
+            >
+              <Button variant="outline" className="w-full">
+                <CreditCard className="mr-2 h-4 w-4" />
+                Process Payment
+              </Button>
+            </motion.div>
           </CardContent>
         </Card>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

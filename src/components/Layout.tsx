@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { 
   Home, 
@@ -165,9 +166,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
         {/* Main content area */}
         <main className="flex-1 overflow-y-auto bg-gradient-to-br from-gray-800 to-gray-900 p-4 md:p-6">
-          <div className="container mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="container mx-auto"
+          >
             {children}
-          </div>
+          </motion.div>
         </main>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { Dashboard } from './pages/Dashboard';
 import { Sheets } from './pages/Sheets';
 import { Metadata } from './pages/Metadata';
@@ -18,8 +19,24 @@ import { TailwindTest } from './pages/TailwindTest';
 import { CenteringTestFinal } from './pages/CenteringTestFinal';
 import { CenteredDashboard } from './pages/CenteredDashboard';
 import { ThemeTest } from './pages/ThemeTest';
+import { SplashScreen } from './components/SplashScreen/SplashScreen';
 
 function App() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate loading time for splash screen
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return <SplashScreen />;
+  }
+
   return (
     <Router>
       <Routes>
