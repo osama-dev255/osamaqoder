@@ -25,6 +25,7 @@ import { Refunds } from './pages/Refunds';
 import { Inventory } from './pages/Inventory';
 import { Purchases } from './pages/Purchases';
 import { Expenses } from './pages/Expenses';
+import { Cashflow } from './pages/Cashflow';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -220,6 +221,16 @@ function App() {
             <ProtectedRoute>
               <Layout>
                 <Expenses />
+              </Layout>
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/cashflow" 
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Cashflow />
               </Layout>
             </ProtectedRoute>
           } 

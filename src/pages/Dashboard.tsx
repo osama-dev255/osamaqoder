@@ -12,7 +12,8 @@ import {
   TrendingUp,
   TrendingDown,
   Calendar,
-  Database
+  Database,
+  Wallet
 } from 'lucide-react';
 import { getSpreadsheetMetadata, getSheetData } from '@/services/apiService';
 import { formatCurrency } from '@/lib/currency';
@@ -298,6 +299,16 @@ export function Dashboard() {
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 1.6, duration: 0.3 }}
             >
+              <Button variant="outline" className="w-full" onClick={() => handleNavigation('/cashflow')}>
+                <Wallet className="mr-2 h-4 w-4" />
+                View Cashflow
+              </Button>
+            </motion.div>
+            <motion.div
+              initial={{ y: 10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 1.7, duration: 0.3 }}
+            >
               <Button variant="outline" className="w-full" onClick={() => handleNavigation('/products')}>
                 <Package className="mr-2 h-4 w-4" />
                 Manage Products
@@ -306,7 +317,7 @@ export function Dashboard() {
             <motion.div
               initial={{ y: 10, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 1.7, duration: 0.3 }}
+              transition={{ delay: 1.8, duration: 0.3 }}
             >
               <Button variant="outline" className="w-full" onClick={() => handleNavigation('/inventory')}>
                 <Database className="mr-2 h-4 w-4" />
@@ -316,7 +327,7 @@ export function Dashboard() {
             <motion.div
               initial={{ y: 10, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 1.8, duration: 0.3 }}
+              transition={{ delay: 1.9, duration: 0.3 }}
             >
               <Button variant="outline" className="w-full" onClick={() => handleNavigation('/customers')}>
                 <Users className="mr-2 h-4 w-4" />
@@ -326,7 +337,7 @@ export function Dashboard() {
             <motion.div
               initial={{ y: 10, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 1.9, duration: 0.3 }}
+              transition={{ delay: 2.0, duration: 0.3 }}
             >
               <Button variant="outline" className="w-full" onClick={() => handleNavigation('/refunds')}>
                 <CreditCard className="mr-2 h-4 w-4" />
@@ -336,7 +347,7 @@ export function Dashboard() {
             <motion.div
               initial={{ y: 10, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 2.0, duration: 0.3 }}
+              transition={{ delay: 2.1, duration: 0.3 }}
             >
               <Button variant="outline" className="w-full" onClick={() => handleNavigation('/reports')}>
                 <TrendingUp className="mr-2 h-4 w-4" />
@@ -346,7 +357,7 @@ export function Dashboard() {
             <motion.div
               initial={{ y: 10, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 2.1, duration: 0.3 }}
+              transition={{ delay: 2.2, duration: 0.3 }}
             >
               <Button variant="outline" className="w-full" onClick={() => handleNavigation('/end-of-day')}>
                 <Calendar className="mr-2 h-4 w-4" />
