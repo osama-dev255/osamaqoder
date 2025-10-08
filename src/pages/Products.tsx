@@ -54,6 +54,7 @@ export function Products() {
                 name: 'COKE 600MLS 12S/W NP',
                 category: 'PET',
                 price: 9700,
+                cost: 8200,
                 stock: 100,
                 minStock: 20,
                 supplier: 'Coca-Cola Tanzania',
@@ -67,11 +68,12 @@ export function Products() {
               id: row[0] || `${index + 1}`, // ID
               name: row[1] || 'Unknown Product', // Product Name
               category: row[2] || 'Uncategorized', // Category
-              price: parseFloat(row[3]) || 0, // Price
-              stock: parseInt(row[4]) || 0, // Stock Quantity
-              minStock: parseInt(row[5]) || 0, // Minimum Stock Level
-              supplier: row[6] || 'Unknown Supplier', // Supplier
-              status: parseInt(row[4]) > 10 ? 'active' : (parseInt(row[4]) > 0 ? 'low' : 'out') // Status based on stock
+              price: parseFloat(row[3]) || 0, // Selling Price
+              cost: parseFloat(row[4]) || 0, // Purchase Cost
+              stock: parseInt(row[5]) || 0, // Stock Quantity
+              minStock: parseInt(row[6]) || 0, // Minimum Stock Level
+              supplier: row[7] || 'Unknown Supplier', // Supplier
+              status: parseInt(row[5]) > 10 ? 'active' : (parseInt(row[5]) > 0 ? 'low' : 'out') // Status based on stock
             }));
             
             setProducts(productData);
@@ -84,6 +86,7 @@ export function Products() {
               name: 'COKE 600MLS 12S/W NP',
               category: 'PET',
               price: 9700,
+              cost: 8200,
               stock: 100,
               minStock: 20,
               supplier: 'Coca-Cola Tanzania',
@@ -94,6 +97,7 @@ export function Products() {
               name: 'SPRITE 600ML 12 S/W NP',
               category: 'PET',
               price: 9700,
+              cost: 8200,
               stock: 85,
               minStock: 15,
               supplier: 'Coca-Cola Tanzania',
@@ -104,6 +108,7 @@ export function Products() {
               name: 'SPAR PINENUT 350ML 24 RB',
               category: 'RGB',
               price: 12800,
+              cost: 11000,
               stock: 42,
               minStock: 10,
               supplier: 'Coca-Cola Tanzania',
@@ -114,6 +119,7 @@ export function Products() {
               name: 'SPRITE 350MLS CR24 RB',
               category: 'RGB',
               price: 12800,
+              cost: 11000,
               stock: 28,
               minStock: 10,
               supplier: 'Coca-Cola Tanzania',
@@ -245,6 +251,7 @@ export function Products() {
                 <TableHead>Product</TableHead>
                 <TableHead>Category</TableHead>
                 <TableHead>Price</TableHead>
+                <TableHead>Cost</TableHead>
                 <TableHead>Stock</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
@@ -260,6 +267,7 @@ export function Products() {
                     <Badge variant="outline">{product.category}</Badge>
                   </TableCell>
                   <TableCell>{formatCurrency(product.price)}</TableCell>
+                  <TableCell>{formatCurrency(product.cost)}</TableCell>
                   <TableCell>{product.stock}</TableCell>
                   <TableCell>
                     {product.status === 'active' && <Badge variant="default">Active</Badge>}

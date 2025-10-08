@@ -182,7 +182,7 @@ export function Purchases() {
                 <TableHead>Product</TableHead>
                 <TableHead>Category</TableHead>
                 <TableHead>Quantity</TableHead>
-                <TableHead>Price</TableHead>
+                <TableHead>Cost</TableHead>
                 <TableHead>Amount</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-right">Actions</TableHead>

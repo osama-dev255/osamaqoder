@@ -28,6 +28,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { getSheetData } from '@/services/apiService';
+import { formatCurrency } from '@/lib/currency';
 
 export function Inventory() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -58,7 +59,9 @@ export function Inventory() {
                 maxStock: 200,
                 unit: 'Pack',
                 lastUpdated: '2024-12-01',
-                status: 'active'
+                status: 'active',
+                cost: 8200,
+                price: 9700
               }
             ];
             setInventoryItems(sampleInventory);
@@ -73,7 +76,9 @@ export function Inventory() {
               maxStock: parseInt(row[5]) || 0, // Maximum Stock Level
               unit: row[6] || 'Unit', // Unit of Measurement
               lastUpdated: row[7] || 'Unknown', // Last Updated
-              status: parseInt(row[3]) > parseInt(row[4]) ? 'active' : (parseInt(row[3]) > 0 ? 'low' : 'out') // Status based on stock
+              status: parseInt(row[3]) > parseInt(row[4]) ? 'active' : (parseInt(row[3]) > 0 ? 'low' : 'out'), // Status based on stock
+              cost: parseFloat(row[8]) || 0, // Purchase Cost
+              price: parseFloat(row[9]) || 0 // Selling Price
             }));
             
             setInventoryItems(inventoryData);
@@ -90,7 +95,9 @@ export function Inventory() {
               maxStock: 200,
               unit: 'Pack',
               lastUpdated: '2024-12-01',
-              status: 'active'
+              status: 'active',
+              cost: 8200,
+              price: 9700
             },
             {
               id: '2',
@@ -101,7 +108,9 @@ export function Inventory() {
               maxStock: 150,
               unit: 'Pack',
               lastUpdated: '2024-12-01',
-              status: 'active'
+              status: 'active',
+              cost: 8200,
+              price: 9700
             },
             {
               id: '3',
@@ -112,7 +121,9 @@ export function Inventory() {
               maxStock: 100,
               unit: 'Pack',
               lastUpdated: '2024-12-01',
-              status: 'active'
+              status: 'active',
+              cost: 11000,
+              price: 12800
             },
             {
               id: '4',
@@ -123,7 +134,9 @@ export function Inventory() {
               maxStock: 80,
               unit: 'Pack',
               lastUpdated: '2024-12-01',
-              status: 'low'
+              status: 'low',
+              cost: 11000,
+              price: 12800
             }
           ];
           setInventoryItems(sampleInventory);
@@ -281,6 +294,8 @@ export function Inventory() {
                 <TableHead>Current Stock</TableHead>
                 <TableHead>Min/Max</TableHead>
                 <TableHead>Unit</TableHead>
+                <TableHead>Cost</TableHead>
+                <TableHead>Price</TableHead>
                 <TableHead>Last Updated</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
@@ -298,6 +313,8 @@ export function Inventory() {
                   <TableCell>{item.currentStock}</TableCell>
                   <TableCell>{item.minStock} / {item.maxStock}</TableCell>
                   <TableCell>{item.unit}</TableCell>
+                  <TableCell>{formatCurrency(item.cost)}</TableCell>
+                  <TableCell>{formatCurrency(item.price)}</TableCell>
                   <TableCell>{item.lastUpdated}</TableCell>
                   <TableCell>
                     {item.status === 'active' && <Badge variant="default">Adequate</Badge>}

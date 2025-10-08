@@ -67,12 +67,13 @@ export function PosTerminal() {
             setProducts(productData);
           } else {
             // Skip header row and map the data to product objects
+            // Using selling price (column 3) for POS transactions
             const productData = rows.slice(1).map((row: any[], index: number) => ({
               id: row[0] || `${index + 1}`, // ID
               name: row[1] || 'Unknown Product', // Product Name
-              price: parseFloat(row[3]) || 0, // Price
-              stock: parseInt(row[4]) || 0, // Stock Quantity
-              category: row[2] || 'Uncategorized' // Category
+              price: parseFloat(row[3]) || 0, // Selling Price (column 3)
+              stock: parseInt(row[5]) || 0, // Stock Quantity (column 5)
+              category: row[2] || 'Uncategorized' // Category (column 2)
             }));
             
             setProducts(productData);
