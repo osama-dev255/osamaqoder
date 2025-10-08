@@ -24,6 +24,7 @@ import { EndOfDay } from './pages/EndOfDay';
 import { Refunds } from './pages/Refunds';
 import { Inventory } from './pages/Inventory';
 import { Purchases } from './pages/Purchases';
+import { Expenses } from './pages/Expenses';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -209,6 +210,16 @@ function App() {
             <ProtectedRoute>
               <Layout>
                 <Purchases />
+              </Layout>
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/expenses" 
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Expenses />
               </Layout>
             </ProtectedRoute>
           } 

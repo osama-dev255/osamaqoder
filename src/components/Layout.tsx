@@ -17,7 +17,8 @@ import {
   Printer,
   Download,
   Calendar,
-  CreditCard
+  CreditCard,
+  TrendingUp
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -41,6 +42,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
     { name: 'Inventory', href: '/inventory', icon: Database },
     { name: 'Sales', href: '/sales', icon: ShoppingCart },
     { name: 'Purchases', href: '/purchases', icon: ShoppingCart },
+    { name: 'Expenses', href: '/expenses', icon: TrendingUp },
     { name: 'Customers', href: '/customers', icon: Users },
     { name: 'Refunds', href: '/refunds', icon: CreditCard },
     { name: 'Reports', href: '/reports', icon: BarChart3 },
