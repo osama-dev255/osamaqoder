@@ -41,7 +41,7 @@ export function Dashboard() {
         }
         
         // Fetch sales data
-        const salesResponse = await getSheetData('Mauzo', 'A1:J1000'); // Get first 1000 sales records
+        const salesResponse = await getSheetData('Sales', 'A1:J1000'); // Get first 1000 sales records
         if (salesResponse && salesResponse.data && salesResponse.data.values) {
           const sales = salesResponse.data.values;
           setSalesData(sales.slice(1, 6)); // Get first 5 sales records (skip header)

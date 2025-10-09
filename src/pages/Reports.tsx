@@ -36,8 +36,8 @@ export function Reports() {
       try {
         setLoading(true);
         
-        // Fetch sales data from Mauzo sheet
-        const salesResponse = await getSheetData('Mauzo', 'A1:J100');
+        // Fetch sales data from Sales sheet
+        const salesResponse = await getSheetData('Sales', 'A1:J100');
         if (salesResponse && salesResponse.data && salesResponse.data.values) {
           const rows = salesResponse.data.values;
           
@@ -62,8 +62,8 @@ export function Reports() {
           setSalesData(Object.values(salesByDate));
         }
         
-        // Fetch product data from Mauzo sheet
-        const productResponse = await getSheetData('Mauzo', 'A1:J100');
+        // Fetch product data from Sales sheet
+        const productResponse = await getSheetData('Sales', 'A1:J100');
         if (productResponse && productResponse.data && productResponse.data.values) {
           const rows = productResponse.data.values;
           

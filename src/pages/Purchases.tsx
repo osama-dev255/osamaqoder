@@ -13,7 +13,6 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { 
   Search, 
-  Plus, 
   Edit, 
   Trash2, 
   Filter
@@ -28,6 +27,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { getSheetData } from '@/services/apiService';
 import { formatCurrency } from '@/lib/currency';
+import { AddPurchaseForm } from '@/components/AddPurchaseForm';
 
 export function Purchases() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -40,8 +40,8 @@ export function Purchases() {
     const fetchPurchases = async () => {
       try {
         setLoading(true);
-        // Fetch purchases data from the Manunuzi sheet
-        const response = await getSheetData('Manunuzi');
+        // Fetch purchases data from the Purchases sheet
+        const response = await getSheetData('Purchases');
         
         if (response && response.data && response.data.values) {
           const rows = response.data.values;
@@ -166,10 +166,7 @@ export function Purchases() {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-              <Button>
-                <Plus className="mr-2 h-4 w-4" />
-                New Purchase
-              </Button>
+              <AddPurchaseForm />
             </div>
           </div>
         </CardHeader>

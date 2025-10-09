@@ -102,6 +102,39 @@ export const clearSheetData = async (sheetName: string, range?: string) => {
   }
 };
 
+// Update inventory quantities for specific products
+export const updateInventoryQuantities = async (updates: { productName: string; quantityChange: number }[]) => {
+  try {
+    const response = await apiClient.post(`${API_ENDPOINTS.SHEETS}/inventory/update-quantities`, { updates });
+    return response;
+  } catch (error: unknown) {
+    console.error('Inventory update error:', error);
+    throw error;
+  }
+};
+
+// Add stock through purchase transactions
+export const addStockThroughPurchases = async (purchases: { productName: string; quantity: number; cost: number }[]) => {
+  try {
+    const response = await apiClient.post(`${API_ENDPOINTS.SHEETS}/purchases/add-stock`, { purchases });
+    return response;
+  } catch (error: unknown) {
+    console.error('Purchase stock addition error:', error);
+    throw error;
+  }
+};
+
+// Rename a sheet
+export const renameSheet = async (oldName: string, newName: string) => {
+  try {
+    const response = await apiClient.post(`${API_ENDPOINTS.SHEETS}/rename`, { oldName, newName });
+    return response;
+  } catch (error: unknown) {
+    console.error('Sheet rename error:', error);
+    throw error;
+  }
+};
+
 export default {
   healthCheck,
   getSpreadsheetMetadata,
@@ -110,4 +143,6 @@ export default {
   appendSheetData,
   updateSheetRange,
   clearSheetData,
+  updateInventoryQuantities,
+  addStockThroughPurchases,
 };

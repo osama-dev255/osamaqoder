@@ -20,7 +20,7 @@ import {
   ShoppingCart
 } from 'lucide-react';
 import { PrintReceipt } from '@/components/PrintReceipt';
-import { getSheetData } from '@/services/apiService';
+import { getSheetData, updateInventoryQuantities } from '@/services/apiService';
 import { formatCurrency } from '@/lib/currency';
 
 interface Product {
@@ -168,7 +168,7 @@ export function PosTerminal() {
   const tax = subtotal * (taxRate / 100);
   const total = subtotal + tax;
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     // Generate receipt data
     const receiptData = {
       id: `TXN-${Date.now()}`,
@@ -183,6 +183,24 @@ export function PosTerminal() {
       total,
       paymentMethod: 'Credit Card'
     };
+
+    // Update inventory quantities - decrease stock for sold items
+    try {
+      const inventoryUpdates = cart.map(item => ({
+        productName: item.product.name,
+        quantityChange: -item.quantity // Negative because we're reducing stock
+      }));
+      
+      const response = await updateInventoryQuantities(inventoryUpdates);
+      console.log('Inventory updated successfully', response);
+      
+      // Show success message to user
+      // In a real app, you might want to show a toast notification
+    } catch (error) {
+      console.error('Failed to update inventory:', error);
+      // In a real app, you might want to show an error message to the user
+      alert('Failed to update inventory. Please try again.');
+    }
 
     // In a real app, you would process the payment here
     console.log('Processing payment...', receiptData);

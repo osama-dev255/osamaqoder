@@ -41,8 +41,8 @@ export function Customers() {
     const fetchCustomers = async () => {
       try {
         setLoading(true);
-        // Fetch customers from the Form Ya Mauzo sheet which contains customer information
-        const response = await getSheetData('Form Ya Mauzo');
+        // Fetch customers from the Sales Forms sheet which contains customer information
+        const response = await getSheetData('Sales Forms');
         
         if (response && response.data && response.data.values) {
           const rows = response.data.values;

@@ -56,8 +56,8 @@ export function Cashflow() {
         
         // Fetch data from multiple sheets to create a comprehensive cashflow
         const [salesResponse, purchasesResponse, expensesResponse] = await Promise.all([
-          getSheetData('Mauzo'), // Sales data
-          getSheetData('Manunuzi'), // Purchases data
+          getSheetData('Sales'), // Sales data
+          getSheetData('Purchases'), // Purchases data
           getSheetData('Expenses') // Expenses data
         ]);
         

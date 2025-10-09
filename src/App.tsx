@@ -21,11 +21,12 @@ import { CenteredDashboard } from './pages/CenteredDashboard';
 import { ThemeTest } from './pages/ThemeTest';
 import { SplashScreen } from './components/SplashScreen/SplashScreen';
 import { EndOfDay } from './pages/EndOfDay';
-import { Refunds } from './pages/Refunds';
-import { Inventory } from './pages/Inventory';
-import { Purchases } from './pages/Purchases';
-import { Expenses } from './pages/Expenses';
-import { Cashflow } from './pages/Cashflow';
+import { Refunds } from '@/pages/Refunds';
+import { Inventory } from '@/pages/Inventory';
+import { Purchases } from '@/pages/Purchases';
+import { Expenses } from '@/pages/Expenses';
+import { Cashflow } from '@/pages/Cashflow';
+// import { InventoryTest } from '@/pages/InventoryTest'; // Commented out missing component
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -235,6 +236,16 @@ function App() {
             </ProtectedRoute>
           } 
         />
+        {/* <Route 
+          path="/inventory-test" 
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <InventoryTest />
+              </Layout>
+            </ProtectedRoute>
+          } 
+        /> */}
       </Routes>
     </Router>
   );

@@ -72,13 +72,15 @@ export function Inventory() {
               productName: row[1] || 'Unknown Product', // Product Name
               category: row[2] || 'Uncategorized', // Category
               currentStock: parseInt(row[3]) || 0, // Current Stock
-              minStock: parseInt(row[4]) || 0, // Minimum Stock Level
+              minStock: parseInt(row[4]) || 0, // Minimum Stock Level (RE-ORDER LEVEL)
               maxStock: parseInt(row[5]) || 0, // Maximum Stock Level
               unit: row[6] || 'Unit', // Unit of Measurement
-              lastUpdated: row[7] || 'Unknown', // Last Updated
-              status: parseInt(row[3]) > parseInt(row[4]) ? 'active' : (parseInt(row[3]) > 0 ? 'low' : 'out'), // Status based on stock
-              cost: parseFloat(row[8]) || 0, // Purchase Cost
-              price: parseFloat(row[9]) || 0 // Selling Price
+              price: parseFloat(row[7]) || 0, // Price (was lastUpdated)
+              location: row[8] || 'Unknown', // Location (was cost)
+              supplier: row[9] || 'Unknown Supplier', // Supplier (was price)
+              lastUpdated: row[10] || 'Unknown', // Last Updated
+              status: row[11] || 'active', // Status
+              cost: parseFloat(row[7]) * 0.9 || 0 // Calculate cost as 90% of price (approximation)
             }));
             
             setInventoryItems(inventoryData);
@@ -157,8 +159,12 @@ export function Inventory() {
 
   const filteredInventory = inventoryItems.filter(item => {
     const matchesSearch = item.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          item.category.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesFilter = filter === 'all' || item.status === filter;
+                          item.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          item.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          item.supplier.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          item.id.includes(searchTerm);
+    const matchesFilter = filter === 'all' || 
+                          item.status.toLowerCase() === filter.toLowerCase();
     return matchesSearch && matchesFilter;
   });
 
@@ -203,30 +209,30 @@ export function Inventory() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold tracking-tight">Inventory</h2>
+        <h2 className="text-2xl font-bold tracking-tight">Inventory - Full Google Sheets View</h2>
         <p className="text-muted-foreground">
-          Manage your product inventory and stock levels
+          Manage your product inventory and stock levels - All Google Sheets columns displayed
         </p>
       </div>
 
       {lowStockItems.length > 0 && (
-        <Card className="border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20">
+        <Card className="border-red-500 bg-gradient-to-r from-red-900/30 to-orange-900/30 backdrop-blur-sm shadow-lg">
           <CardHeader>
-            <CardTitle className="flex items-center text-yellow-700 dark:text-yellow-300">
-              <AlertTriangle className="mr-2 h-5 w-5" />
-              Low Stock Alert
+            <CardTitle className="flex items-center text-red-300 font-bold text-xl">
+              <AlertTriangle className="mr-3 h-6 w-6 text-red-400" />
+              <span className="font-sans">Low Stock Alert</span>
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-red-200/80 font-medium">
               {lowStockItems.length} item{lowStockItems.length !== 1 ? 's' : ''} below minimum stock level
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-2">
+            <div className="space-y-3">
               {lowStockItems.map(item => (
-                <div key={item.id} className="flex items-center justify-between p-2 bg-white dark:bg-gray-800 rounded">
-                  <span className="font-medium">{item.productName}</span>
-                  <span className="text-sm">
-                    {item.currentStock} {item.unit} (Min: {item.minStock})
+                <div key={item.id} className="flex items-center justify-between p-3 bg-red-900/20 backdrop-blur-sm rounded-lg border border-red-800/50 hover:bg-red-800/30 transition-all duration-200">
+                  <span className="font-medium text-red-100 font-sans">{item.productName}</span>
+                  <span className="text-sm text-red-200 font-mono">
+                    {item.currentStock} {item.unit} <span className="text-red-300">/</span> Min: {item.minStock}
                   </span>
                 </div>
               ))}
@@ -239,9 +245,9 @@ export function Inventory() {
         <CardHeader>
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
-              <CardTitle>Inventory Management</CardTitle>
+              <CardTitle>Complete Inventory Management</CardTitle>
               <CardDescription>
-                View and manage your product stock levels
+                View and manage your product stock levels - All Google Sheets columns displayed
               </CardDescription>
             </div>
             <div className="flex flex-col sm:flex-row gap-2">
@@ -265,16 +271,13 @@ export function Inventory() {
                   <DropdownMenuLabel>Filter by status</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onSelect={() => setFilter('all')}>
-                    All
+                    All Items
                   </DropdownMenuItem>
-                  <DropdownMenuItem onSelect={() => setFilter('active')}>
-                    Adequate Stock
+                  <DropdownMenuItem onSelect={() => setFilter('Active')}>
+                    Active Items
                   </DropdownMenuItem>
-                  <DropdownMenuItem onSelect={() => setFilter('low')}>
-                    Low Stock
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onSelect={() => setFilter('out')}>
-                    Out of Stock
+                  <DropdownMenuItem onSelect={() => setFilter('In-Active')}>
+                    Inactive Items
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -294,8 +297,10 @@ export function Inventory() {
                 <TableHead>Current Stock</TableHead>
                 <TableHead>Min/Max</TableHead>
                 <TableHead>Unit</TableHead>
-                <TableHead>Cost</TableHead>
                 <TableHead>Price</TableHead>
+                <TableHead>Cost</TableHead>
+                <TableHead>Location</TableHead>
+                <TableHead>Supplier</TableHead>
                 <TableHead>Last Updated</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
@@ -313,13 +318,23 @@ export function Inventory() {
                   <TableCell>{item.currentStock}</TableCell>
                   <TableCell>{item.minStock} / {item.maxStock}</TableCell>
                   <TableCell>{item.unit}</TableCell>
-                  <TableCell>{formatCurrency(item.cost)}</TableCell>
                   <TableCell>{formatCurrency(item.price)}</TableCell>
+                  <TableCell>{formatCurrency(item.cost)}</TableCell>
+                  <TableCell>{item.location}</TableCell>
+                  <TableCell>{item.supplier}</TableCell>
                   <TableCell>{item.lastUpdated}</TableCell>
                   <TableCell>
-                    {item.status === 'active' && <Badge variant="default">Adequate</Badge>}
-                    {item.status === 'low' && <Badge variant="destructive">Low Stock</Badge>}
-                    {item.status === 'out' && <Badge variant="secondary">Out of Stock</Badge>}
+                    {item.status === 'active' || item.status === 'Active' ? (
+                      <Badge variant="default">Active</Badge>
+                    ) : item.status === 'In-Active' || item.status === 'inactive' ? (
+                      <Badge variant="secondary">Inactive</Badge>
+                    ) : item.status === 'low' ? (
+                      <Badge variant="destructive">Low Stock</Badge>
+                    ) : item.status === 'out' ? (
+                      <Badge variant="secondary">Out of Stock</Badge>
+                    ) : (
+                      <Badge variant="default">{item.status}</Badge>
+                    )}
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">

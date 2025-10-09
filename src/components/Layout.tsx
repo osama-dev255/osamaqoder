@@ -4,23 +4,15 @@ import { motion } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { 
   Home, 
-  FileText, 
   Database, 
-  Users, 
-  Settings, 
-  LogOut, 
-  Menu, 
-  X,
   ShoppingCart,
   Package,
-  BarChart3,
-  Printer,
-  Download,
-  Calendar,
-  CreditCard,
+  Wallet,
   TrendingUp,
-  Wallet
+  Printer,
+  Download
 } from 'lucide-react';
+import { LogOut, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -45,13 +37,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
     { name: 'Purchases', href: '/purchases', icon: ShoppingCart },
     { name: 'Expenses', href: '/expenses', icon: TrendingUp },
     { name: 'Cashflow', href: '/cashflow', icon: Wallet },
-    { name: 'Customers', href: '/customers', icon: Users },
-    { name: 'Refunds', href: '/refunds', icon: CreditCard },
-    { name: 'Reports', href: '/reports', icon: BarChart3 },
-    { name: 'End of Day', href: '/end-of-day', icon: Calendar },
-    { name: 'Sheets', href: '/sheets', icon: FileText },
-    { name: 'Metadata', href: '/metadata', icon: Database },
-    { name: 'Settings', href: '/settings', icon: Settings },
+    // Test route - only show in development
+    ...(import.meta.env.MODE === 'development' ? [{ name: 'Inventory Test', href: '/inventory-test', icon: Database }] : []),
   ];
 
   const handleLogout = () => {

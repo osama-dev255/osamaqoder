@@ -56,7 +56,6 @@ export function Products() {
                 price: 9700,
                 cost: 8200,
                 stock: 100,
-                minStock: 20,
                 supplier: 'Coca-Cola Tanzania',
                 status: 'active'
               }
@@ -71,9 +70,8 @@ export function Products() {
               price: parseFloat(row[3]) || 0, // Selling Price
               cost: parseFloat(row[4]) || 0, // Purchase Cost
               stock: parseInt(row[5]) || 0, // Stock Quantity
-              minStock: parseInt(row[6]) || 0, // Minimum Stock Level
-              supplier: row[7] || 'Unknown Supplier', // Supplier
-              status: parseInt(row[5]) > 10 ? 'active' : (parseInt(row[5]) > 0 ? 'low' : 'out') // Status based on stock
+              supplier: row[6] || 'Unknown Supplier', // Supplier
+              status: row[7] || 'active' // Status
             }));
             
             setProducts(productData);
@@ -88,7 +86,6 @@ export function Products() {
               price: 9700,
               cost: 8200,
               stock: 100,
-              minStock: 20,
               supplier: 'Coca-Cola Tanzania',
               status: 'active'
             },
@@ -99,7 +96,6 @@ export function Products() {
               price: 9700,
               cost: 8200,
               stock: 85,
-              minStock: 15,
               supplier: 'Coca-Cola Tanzania',
               status: 'active'
             },
@@ -110,7 +106,6 @@ export function Products() {
               price: 12800,
               cost: 11000,
               stock: 42,
-              minStock: 10,
               supplier: 'Coca-Cola Tanzania',
               status: 'active'
             },
@@ -121,7 +116,6 @@ export function Products() {
               price: 12800,
               cost: 11000,
               stock: 28,
-              minStock: 10,
               supplier: 'Coca-Cola Tanzania',
               status: 'active'
             }
@@ -144,8 +138,11 @@ export function Products() {
 
   const filteredProducts = products.filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          product.category.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesFilter = filter === 'all' || product.status === filter;
+                          product.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          product.supplier.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          product.id.includes(searchTerm);
+    const matchesFilter = filter === 'all' || 
+                          product.status.toLowerCase() === filter.toLowerCase();
     return matchesSearch && matchesFilter;
   });
 
@@ -185,12 +182,17 @@ export function Products() {
     );
   }
 
+  // Debug: Log the first product to see the data structure
+  if (products.length > 0) {
+    console.log('First product data:', products[0]);
+  }
+
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold tracking-tight">Products</h2>
+        <h2 className="text-2xl font-bold tracking-tight">Products - Full Google Sheets View</h2>
         <p className="text-muted-foreground">
-          Manage your product inventory
+          Manage your product inventory - All Google Sheets columns displayed
         </p>
       </div>
 
@@ -198,9 +200,9 @@ export function Products() {
         <CardHeader>
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
-              <CardTitle>Product Inventory</CardTitle>
+              <CardTitle>Complete Product Inventory</CardTitle>
               <CardDescription>
-                View and manage your products
+                View and manage your products - All Google Sheets columns displayed
               </CardDescription>
             </div>
             <div className="flex flex-col sm:flex-row gap-2">
@@ -224,16 +226,13 @@ export function Products() {
                   <DropdownMenuLabel>Filter by status</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onSelect={() => setFilter('all')}>
-                    All
+                    All Products
                   </DropdownMenuItem>
-                  <DropdownMenuItem onSelect={() => setFilter('active')}>
-                    Active
+                  <DropdownMenuItem onSelect={() => setFilter('Active')}>
+                    Active Products
                   </DropdownMenuItem>
-                  <DropdownMenuItem onSelect={() => setFilter('low')}>
-                    Low Stock
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onSelect={() => setFilter('out')}>
-                    Out of Stock
+                  <DropdownMenuItem onSelect={() => setFilter('In-Active')}>
+                    Inactive Products
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -248,11 +247,13 @@ export function Products() {
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead>ID</TableHead>
                 <TableHead>Product</TableHead>
                 <TableHead>Category</TableHead>
-                <TableHead>Price</TableHead>
-                <TableHead>Cost</TableHead>
+                <TableHead>Unit Price</TableHead>
+                <TableHead>Unit Cost</TableHead>
                 <TableHead>Stock</TableHead>
+                <TableHead>Supplier</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
@@ -260,6 +261,7 @@ export function Products() {
             <TableBody>
               {filteredProducts.map((product) => (
                 <TableRow key={product.id}>
+                  <TableCell>{product.id}</TableCell>
                   <TableCell>
                     <div className="font-medium">{product.name}</div>
                   </TableCell>
@@ -269,10 +271,15 @@ export function Products() {
                   <TableCell>{formatCurrency(product.price)}</TableCell>
                   <TableCell>{formatCurrency(product.cost)}</TableCell>
                   <TableCell>{product.stock}</TableCell>
+                  <TableCell>{product.supplier}</TableCell>
                   <TableCell>
-                    {product.status === 'active' && <Badge variant="default">Active</Badge>}
-                    {product.status === 'low' && <Badge variant="destructive">Low Stock</Badge>}
-                    {product.status === 'out' && <Badge variant="secondary">Out of Stock</Badge>}
+                    {product.status === 'active' || product.status === 'Active' ? (
+                      <Badge variant="default">Active</Badge>
+                    ) : product.status === 'In-Active' || product.status === 'inactive' ? (
+                      <Badge variant="secondary">Inactive</Badge>
+                    ) : (
+                      <Badge variant="destructive">{product.status}</Badge>
+                    )}
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">

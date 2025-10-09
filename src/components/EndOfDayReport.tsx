@@ -52,9 +52,9 @@ export function EndOfDayReport() {
       try {
         setLoading(true);
         
-        // Fetch today's sales data from Mauzo sheet
+        // Fetch today's sales data from Sales sheet
         const today = new Date().toLocaleDateString('en-GB'); // Format: DD/MM/YYYY
-        const response = await getSheetData('Mauzo');
+        const response = await getSheetData('Sales');
         
         if (response && response.data && response.data.values) {
           const rows = response.data.values;
