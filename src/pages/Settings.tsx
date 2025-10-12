@@ -19,6 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { useToast } from '@/components/ui/use-toast';
 
 export function Settings() {
   const [businessName, setBusinessName] = useState('Business Project Tanzania');
@@ -31,6 +32,7 @@ export function Settings() {
   const [notifications, setNotifications] = useState(true);
   const [lowStockAlert, setLowStockAlert] = useState(true);
   const [printerEnabled, setPrinterEnabled] = useState(true);
+  const { toast } = useToast();
 
   const handleSave = () => {
     // In a real app, this would save to a database or API
@@ -48,7 +50,10 @@ export function Settings() {
     });
     
     // Show success message
-    alert('Settings saved successfully!');
+    toast({
+      title: "Settings saved",
+      description: "Your settings have been saved successfully.",
+    });
   };
 
   return (
