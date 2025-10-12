@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { 
   Table, 
   TableBody, 
@@ -623,16 +624,16 @@ export function CustomerProfileManagement() {
             
             <div className="space-y-2">
               <Label htmlFor="category">Category</Label>
-              <select
-                id="category"
-                className="w-full h-10 px-3 py-2 text-sm border border-input bg-background rounded-md"
-                value={formData.category}
-                onChange={(e) => setFormData({...formData, category: e.target.value as any})}
-              >
-                <option value="regular">Regular</option>
-                <option value="premium">Premium</option>
-                <option value="vip">VIP</option>
-              </select>
+              <Select value={formData.category} onValueChange={(value) => setFormData({...formData, category: value as any})}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="regular">Regular</SelectItem>
+                  <SelectItem value="premium">Premium</SelectItem>
+                  <SelectItem value="vip">VIP</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             
             <div className="space-y-2">
@@ -670,15 +671,15 @@ export function CustomerProfileManagement() {
             
             <div className="space-y-2">
               <Label htmlFor="status">Status</Label>
-              <select
-                id="status"
-                className="w-full h-10 px-3 py-2 text-sm border border-input bg-background rounded-md"
-                value={formData.status}
-                onChange={(e) => setFormData({...formData, status: e.target.value as any})}
-              >
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-              </select>
+              <Select value={formData.status} onValueChange={(value) => setFormData({...formData, status: value as any})}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="active">Active</SelectItem>
+                  <SelectItem value="inactive">Inactive</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
           

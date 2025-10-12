@@ -24,7 +24,8 @@ import {
   Building,
   FileText,
   Check,
-  Eye
+  Eye,
+  RefreshCw
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -39,7 +40,7 @@ import { formatCurrency } from '@/lib/currency';
 import { AddPurchaseForm } from '@/components/AddPurchaseForm';
 import { SupplierPerformanceTracker } from '@/components/SupplierPerformanceTracker';
 import { PurchaseOrderForm } from '@/components/PurchaseOrderForm';
-import { PurchaseOrderList } from '@/components/PurchaseOrderList';
+import { ViewOrdersModule } from '@/components/ViewOrdersModule';
 import { SupplierManagement } from '@/components/SupplierManagement';
 import { PurchaseApprovalWorkflow } from '@/components/PurchaseApprovalWorkflow';
 import { PurchaseOrderTracking } from '@/components/PurchaseOrderTracking';
@@ -253,7 +254,7 @@ export function Purchases() {
     );
   }
 
-  // Show Purchase Order List
+  // Show Purchase Order List (using the new ViewOrdersModule)
   if (showPurchaseOrderList) {
     return (
       <div className="space-y-6">
@@ -268,10 +269,11 @@ export function Purchases() {
             Back to Purchases
           </Button>
         </div>
-        <PurchaseOrderList 
+        <ViewOrdersModule 
           onViewOrder={(order) => console.log('View order:', order)}
           onEditOrder={(order) => console.log('Edit order:', order)}
           onDeleteOrder={(orderId) => console.log('Delete order:', orderId)}
+          onRefresh={fetchPurchases}
         />
       </div>
     );

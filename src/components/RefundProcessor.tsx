@@ -197,7 +197,7 @@ export function RefundProcessor() {
                         <td className="p-3 text-right">{formatCurrency(item.unitPrice)}</td>
                         <td className="p-3 text-right font-medium">{formatCurrency(item.totalPrice)}</td>
                         <td className="p-3 text-center">
-                          <Input
+                          <input
                             type="checkbox"
                             checked={refundItems.some(refundItem => refundItem.id === item.id)}
                             onChange={() => handleItemRefundToggle(item)}

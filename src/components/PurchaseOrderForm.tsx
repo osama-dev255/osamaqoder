@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -29,7 +29,9 @@ import {
   User,
   Building,
   Tag,
-  Hash
+  Hash,
+  AlertCircle,
+  Loader2
 } from 'lucide-react';
 import { formatCurrency } from '@/lib/currency';
 import { appendSheetData } from '@/services/apiService';
@@ -64,6 +66,8 @@ export function PurchaseOrderForm({ onOrderCreated, onCancel }: PurchaseOrderFor
   
   // Form validation
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   
   // Calculate totals
   const subtotal = items.reduce((sum, item) => sum + item.total, 0);
@@ -90,7 +94,13 @@ export function PurchaseOrderForm({ onOrderCreated, onCancel }: PurchaseOrderFor
   const updateItem = (id: string, field: keyof PurchaseOrderItem, value: string | number) => {
     setItems(items.map(item => {
       if (item.id === id) {
-        const updatedItem = { ...item, [field]: value };
+        // Ensure numeric fields are properly handled
+        let updatedValue = value;
+        if (field === 'quantity' || field === 'unitPrice') {
+          updatedValue = field === 'quantity' ? Math.max(0, Number(value) || 0) : Math.max(0, Number(value) || 0);
+        }
+        
+        const updatedItem = { ...item, [field]: updatedValue };
         
         // Recalculate total when quantity or unitPrice changes
         if (field === 'quantity' || field === 'unitPrice') {
@@ -142,6 +152,9 @@ export function PurchaseOrderForm({ onOrderCreated, onCancel }: PurchaseOrderFor
       return;
     }
     
+    setIsSubmitting(true);
+    setSubmitError(null);
+    
     try {
       // Prepare data for Google Sheets
       // Header row
@@ -179,11 +192,22 @@ export function PurchaseOrderForm({ onOrderCreated, onCancel }: PurchaseOrderFor
       
       // Notify parent component
       onOrderCreated();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error creating purchase order:', error);
-      alert('Failed to create purchase order. Please try again.');
+      setSubmitError(error.message || 'Failed to create purchase order. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
+
+  // Auto-generate order number if empty
+  useEffect(() => {
+    if (!orderNumber) {
+      const date = new Date().toISOString().slice(2, 10).replace(/-/g, '');
+      const random = Math.floor(1000 + Math.random() * 9000);
+      setOrderNumber(`PO-${date}-${random}`);
+    }
+  }, [orderNumber]);
 
   return (
     <Card className="w-full">
@@ -326,7 +350,7 @@ export function PurchaseOrderForm({ onOrderCreated, onCancel }: PurchaseOrderFor
                       id={`quantity-${item.id}`}
                       type="number"
                       min="1"
-                      value={item.quantity}
+                      value={item.quantity || ''}
                       onChange={(e) => updateItem(item.id, 'quantity', parseInt(e.target.value) || 0)}
                       className={errors[`item-${index}-quantity`] ? 'border-red-500' : ''}
                     />
@@ -340,7 +364,7 @@ export function PurchaseOrderForm({ onOrderCreated, onCancel }: PurchaseOrderFor
                       type="number"
                       min="0"
                       step="0.01"
-                      value={item.unitPrice}
+                      value={item.unitPrice || ''}
                       onChange={(e) => updateItem(item.id, 'unitPrice', parseFloat(e.target.value) || 0)}
                       className={errors[`item-${index}-unitPrice`] ? 'border-red-500' : ''}
                     />
@@ -400,14 +424,31 @@ export function PurchaseOrderForm({ onOrderCreated, onCancel }: PurchaseOrderFor
             </div>
           </CardContent>
         </Card>
+        
+        {/* Error message */}
+        {submitError && (
+          <div className="bg-red-50 border border-red-200 rounded-md p-4 flex items-center">
+            <AlertCircle className="h-5 w-5 text-red-500 mr-2" />
+            <span className="text-red-700">{submitError}</span>
+          </div>
+        )}
       </CardContent>
       <CardFooter className="flex justify-between">
         <Button variant="outline" onClick={onCancel}>
           Cancel
         </Button>
-        <Button onClick={handleSubmit}>
-          <Save className="mr-2 h-4 w-4" />
-          Create Purchase Order
+        <Button onClick={handleSubmit} disabled={isSubmitting}>
+          {isSubmitting ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Creating...
+            </>
+          ) : (
+            <>
+              <Save className="mr-2 h-4 w-4" />
+              Create Purchase Order
+            </>
+          )}
         </Button>
       </CardFooter>
     </Card>

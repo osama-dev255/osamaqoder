@@ -56,7 +56,7 @@ export function Login() {
               </div>
             </motion.div>
             <CardTitle className="text-3xl font-bold bg-gradient-to-r from-indigo-300 to-purple-300 bg-clip-text text-transparent">
-              Railway POS
+              Kilango Group
             </CardTitle>
             <CardDescription className="text-slate-600 mt-2">
               Enter your credentials to access your account
@@ -155,7 +155,7 @@ export function Login() {
             </div>
             
             <div className="mt-6 text-center text-xs text-slate-600">
-              <p>© 2025 Business Project Tanzania. All rights reserved.</p>
+              <p>© 2025 Kilango Group Food Ind LTD. Haki zote zimehifadhiwa.</p>
             </div>
           </CardContent>
         </Card>

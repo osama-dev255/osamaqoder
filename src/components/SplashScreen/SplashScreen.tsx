@@ -47,7 +47,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ isLoading = true }) 
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.3, duration: 0.5 }}
         >
-          Railway POS
+          Kilango Group Food Ind. LTD
         </motion.h1>
         <motion.p 
           className="loading-text"
@@ -55,7 +55,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ isLoading = true }) 
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.5, duration: 0.5 }}
         >
-          Loading your dashboard...
+          Biashara kidigitally 💫...
         </motion.p>
         <motion.div 
           className="loading-bar"

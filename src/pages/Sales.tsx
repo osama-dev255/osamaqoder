@@ -3,6 +3,23 @@ import { motion } from 'framer-motion';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { 
+  Table, 
+  TableBody, 
+  TableCell, 
+  TableHead, 
+  TableHeader, 
+  TableRow 
+} from '@/components/ui/table';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { 
   ShoppingCart, 
   DollarSign, 
@@ -39,7 +56,9 @@ import {
   ResponsiveContainer,
   PieChart as RechartsPieChart,
   Pie,
-  Cell
+  Cell,
+  LineChart,
+  Line
 } from 'recharts';
 
 interface Sale {
@@ -875,196 +894,220 @@ export function Sales() {
     );
   }
 
-  if (loading) {
-    return (
-      <div className="space-y-6">
-        <div className="flex justify-between items-center">
-          <div>
-            <h2 className="text-2xl font-bold tracking-tight">Sales Records</h2>
-            <p className="text-gray-600">
-              View and manage your sales records
-            </p>
-
-          </div>
-          <div className="flex gap-2">
-            <Button 
-              variant="outline" 
-              onClick={() => setActiveTab('terminal')}
-            >
-              Back to Terminal
-            </Button>
-            <Button 
-              variant="outline" 
-              onClick={() => setActiveTab('analytics')}
-            >
-              Sales Analytics
-            </Button>
-          </div>
-        </div>
-        <Card>
-          <CardContent className="flex items-center justify-center h-64">
-            <div className="text-muted-foreground">Loading sales records...</div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="space-y-6">
-        <div className="flex justify-between items-center">
-          <div>
-            <h2 className="text-2xl font-bold tracking-tight">Sales Records</h2>
-            <p className="text-gray-600">
-              View and manage your sales records
-            </p>
-
-          </div>
-          <div className="flex gap-2">
-            <Button 
-              variant="outline" 
-              onClick={() => setActiveTab('terminal')}
-            >
-              Back to Terminal
-            </Button>
-            <Button 
-              variant="outline" 
-              onClick={() => setActiveTab('analytics')}
-            >
-              Sales Analytics
-            </Button>
-          </div>
-        </div>
-        <Card>
-          <CardContent className="flex items-center justify-center h-64">
-            <div className="text-red-500">{error}</div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight">Sales Records</h2>
-          <p className="text-gray-600">
-            Manage your sales transactions and records
-          </p>
-
-        </div>
-        <div className="flex gap-2">
-          <Button 
-            variant="outline" 
-            onClick={() => setActiveTab('terminal')}
-          >
-            Back to Terminal
-          </Button>
-          <Button 
-            variant="outline" 
-            onClick={() => setActiveTab('analytics')}
-          >
-            Sales Analytics
-          </Button>
-        </div>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+  if (activeTab === 'records') {
+    if (loading) {
+      return (
+        <div className="space-y-6">
+          <div className="flex justify-between items-center">
             <div>
-              <CardTitle>Sales Transactions</CardTitle>
-              <CardDescription>
-                View your sales history
-              </CardDescription>
+              <h2 className="text-2xl font-bold tracking-tight">Sales Records</h2>
+              <p className="text-gray-600">
+                View and manage your sales records
+              </p>
             </div>
-            <div className="flex flex-col sm:flex-row gap-2">
-              <div className="relative">
-                <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
-                <Input
-                  placeholder="Search sales..."
-                  className="pl-8"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline">
-                    <Filter className="mr-2 h-4 w-4" />
-                    Filter
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuLabel>Filter by status</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onSelect={() => setFilter('all')}>
-                    All
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onSelect={() => setFilter('completed')}>
-                    Completed
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+            <div className="flex gap-2">
+              <Button 
+                variant="outline" 
+                onClick={() => setActiveTab('terminal')}
+              >
+                Back to Terminal
+              </Button>
+              <Button 
+                variant="outline" 
+                onClick={() => setActiveTab('analytics')}
+              >
+                Sales Analytics
+              </Button>
             </div>
           </div>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Receipt No.</TableHead>
-                <TableHead>Date & Time</TableHead>
-                <TableHead>Product</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>Quantity</TableHead>
-                <TableHead>Price</TableHead>
-                <TableHead>Discount</TableHead>
-                <TableHead>Total Amount</TableHead>
-                <TableHead>Sold By</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredSales.map((sale) => (
-                <TableRow key={sale.id}>
-                  <TableCell>
-                    <div className="font-medium">#{sale.receiptNo}</div>
-                  </TableCell>
-                  <TableCell>
-                    <div>{sale.date}</div>
-                    <div className="text-sm text-gray-600">{sale.time}</div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="font-medium">{sale.product}</div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant="outline">{sale.category}</Badge>
-                  </TableCell>
-                  <TableCell>{sale.quantity}</TableCell>
-                  <TableCell>{formatCurrency(sale.price)}</TableCell>
-                  <TableCell>{formatCurrency(sale.discount)}</TableCell>
-                  <TableCell>{formatCurrency(sale.totalAmount)}</TableCell>
-                  <TableCell>{sale.soldBy}</TableCell>
-                  <TableCell>
-                    {sale.status === 'completed' && <Badge variant="default">Completed</Badge>}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end gap-2">
-                      <Button variant="outline" size="sm">
-                        View Details
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
-    </div>
-  );
+          <Card>
+            <CardContent className="flex items-center justify-center h-64">
+              <div className="text-muted-foreground">Loading sales records...</div>
+            </CardContent>
+          </Card>
+        </div>
+      );
+    }
+
+    if (error) {
+      return (
+        <div className="space-y-6">
+          <div className="flex justify-between items-center">
+            <div>
+              <h2 className="text-2xl font-bold tracking-tight">Sales Records</h2>
+              <p className="text-gray-600">
+                View and manage your sales records
+              </p>
+            </div>
+            <div className="flex gap-2">
+              <Button 
+                variant="outline" 
+                onClick={() => setActiveTab('terminal')}
+              >
+                Back to Terminal
+              </Button>
+              <Button 
+                variant="outline" 
+                onClick={() => setActiveTab('analytics')}
+              >
+                Sales Analytics
+              </Button>
+            </div>
+          </div>
+          <Card>
+            <CardContent className="flex items-center justify-center h-64">
+              <div className="text-red-500">{error}</div>
+            </CardContent>
+          </Card>
+        </div>
+      );
+    }
+
+    return (
+      <div className="space-y-6">
+        <div className="flex justify-between items-center">
+          <div>
+            <h2 className="text-2xl font-bold tracking-tight">Sales Records</h2>
+            <p className="text-gray-600">
+              Manage your sales transactions and records
+            </p>
+          </div>
+          <div className="flex gap-2">
+            <Button 
+              variant="outline" 
+              onClick={() => setActiveTab('terminal')}
+            >
+              Back to Terminal
+            </Button>
+            <Button 
+              variant="outline" 
+              onClick={() => setActiveTab('analytics')}
+            >
+              Sales Analytics
+            </Button>
+          </div>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div>
+                <CardTitle>Sales Transactions</CardTitle>
+                <CardDescription>
+                  View your sales history
+                </CardDescription>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-2">
+                <div className="relative">
+                  <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
+                  <Input
+                    placeholder="Search sales..."
+                    className="pl-8"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline">
+                      <Filter className="mr-2 h-4 w-4" />
+                      Filter
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuLabel>Filter by status</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onSelect={() => setFilter('all')}>
+                      All
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onSelect={() => setFilter('completed')}>
+                      Completed
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            {filteredSales.length === 0 ? (
+              <div className="text-center py-8 text-gray-500">
+                <Database className="h-12 w-12 mx-auto mb-4" />
+                <p>No sales records found</p>
+                <p className="text-sm">Try adjusting your search or filter criteria</p>
+              </div>
+            ) : (
+              <>
+                <div className="rounded-md border">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Receipt No.</TableHead>
+                        <TableHead>Date & Time</TableHead>
+                        <TableHead>Product</TableHead>
+                        <TableHead>Category</TableHead>
+                        <TableHead>Quantity</TableHead>
+                        <TableHead>Price</TableHead>
+                        <TableHead>Discount</TableHead>
+                        <TableHead>Total Amount</TableHead>
+                        <TableHead>Sold By</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredSales.map((sale) => (
+                        <TableRow key={sale.id}>
+                          <TableCell>
+                            <div className="font-medium">#{sale.receiptNo}</div>
+                          </TableCell>
+                          <TableCell>
+                            <div>{sale.date}</div>
+                            <div className="text-sm text-gray-600">{sale.time}</div>
+                          </TableCell>
+                          <TableCell>
+                            <div className="font-medium">{sale.product}</div>
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant="outline">{sale.category}</Badge>
+                          </TableCell>
+                          <TableCell>{sale.quantity}</TableCell>
+                          <TableCell>{formatCurrency(sale.price)}</TableCell>
+                          <TableCell>{formatCurrency(sale.discount)}</TableCell>
+                          <TableCell>{formatCurrency(sale.totalAmount)}</TableCell>
+                          <TableCell>{sale.soldBy}</TableCell>
+                          <TableCell>
+                            {sale.status === 'completed' && <Badge variant="default">Completed</Badge>}
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <div className="flex justify-end gap-2">
+                              <Button variant="outline" size="sm">
+                                View Details
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+                <div className="flex items-center justify-between mt-4">
+                  <div className="text-sm text-gray-600">
+                    Showing {Math.min(filteredSales.length, 100)} of {sales.length} sales records
+                  </div>
+                  <div className="flex gap-2">
+                    <Button variant="outline" size="sm">
+                      Previous
+                    </Button>
+                    <Button variant="outline" size="sm">
+                      Next
+                    </Button>
+                  </div>
+                </div>
+              </>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 }
