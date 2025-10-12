@@ -1,77 +1,78 @@
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Download } from 'lucide-react';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { Download, FileJson, FileText } from 'lucide-react';
+import { exportSheetsData } from '@/services/apiService';
+import { useToast } from '@/components/ui/use-toast';
 
 interface ExportDataProps {
-  data: Record<string, unknown>[];
-  filename: string;
+  className?: string;
 }
 
-export function ExportData({ data, filename }: ExportDataProps) {
-  const exportToCSV = () => {
-    if (data.length === 0) return;
+export function ExportData({ className = '' }: ExportDataProps) {
+  const [isExporting, setIsExporting] = useState(false);
+  const { toast } = useToast();
 
-    const headers = Object.keys(data[0]);
-    const csvContent = [
-      headers.join(','),
-      ...data.map(row => 
-        headers.map(fieldName => JSON.stringify(row[fieldName] || '')).join(',')
-      )
-    ].join('\n');
-
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', `${filename}.csv`);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
-  const exportToJSON = () => {
-    const jsonContent = JSON.stringify(data, null, 2);
-    const blob = new Blob([jsonContent], { type: 'application/json;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', `${filename}.json`);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
-  const exportToExcel = () => {
-    // For simplicity, we'll export to CSV which Excel can open
-    exportToCSV();
+  const handleExport = async (format: 'csv' | 'json') => {
+    try {
+      setIsExporting(true);
+      
+      const response = await exportSheetsData(format);
+      
+      // Create a blob from the response data
+      const blob = new Blob([response.data], {
+        type: format === 'csv' ? 'text/csv' : 'application/json'
+      });
+      
+      // Create a download link
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `pos-export.${format}`;
+      document.body.appendChild(link);
+      link.click();
+      
+      // Clean up
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      
+      toast({
+        title: 'Export Successful',
+        description: `Data exported as ${format.toUpperCase()} successfully.`,
+      });
+    } catch (error) {
+      console.error('Export error:', error);
+      toast({
+        title: 'Export Failed',
+        description: 'Failed to export data. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="flex items-center gap-2">
-          <Download className="h-4 w-4" />
-          Export
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={exportToCSV}>
-          Export as CSV
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={exportToExcel}>
-          Export as Excel
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={exportToJSON}>
-          Export as JSON
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <div className={`flex gap-2 ${className}`}>
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => handleExport('csv')}
+        disabled={isExporting}
+        className="flex items-center"
+      >
+        <FileText className="h-4 w-4 mr-2" />
+        Export CSV
+      </Button>
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => handleExport('json')}
+        disabled={isExporting}
+        className="flex items-center"
+      >
+        <FileJson className="h-4 w-4 mr-2" />
+        Export JSON
+      </Button>
+    </div>
   );
 }

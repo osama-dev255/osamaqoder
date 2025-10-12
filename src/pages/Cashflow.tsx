@@ -179,13 +179,15 @@ export function Cashflow() {
       <div className="space-y-6">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Cashflow</h2>
-          <p className="text-muted-foreground">
-            Loading cashflow data...
+          <p className="text-gray-600">
+            Track and manage your cash flow
           </p>
+
         </div>
         <Card>
           <CardContent className="flex items-center justify-center h-64">
-            <div className="text-muted-foreground">Loading cashflow...</div>
+            <div className="text-gray-600">Loading cashflow...</div>
+
           </CardContent>
         </Card>
       </div>
@@ -197,9 +199,10 @@ export function Cashflow() {
       <div className="space-y-6">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Cashflow</h2>
-          <p className="text-muted-foreground">
-            Monitor your business cashflow
+          <p className="text-gray-600">
+            View and analyze your cash flow
           </p>
+
         </div>
         <Card>
           <CardContent className="flex items-center justify-center h-64">
@@ -214,9 +217,10 @@ export function Cashflow() {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold tracking-tight">Cashflow</h2>
-        <p className="text-muted-foreground">
-          Monitor your business cashflow and financial transactions
+        <p className="text-gray-600">
+          Manage your cash flow and financial transactions
         </p>
+
       </div>
 
       {/* Cashflow Summary Cards */}
@@ -224,43 +228,51 @@ export function Cashflow() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Current Balance</CardTitle>
-            <Wallet className="h-4 w-4 text-muted-foreground" />
+            <Wallet className="h-4 w-4 text-gray-500" />
+
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{formatCurrency(currentBalance)}</div>
-            <p className="text-xs text-muted-foreground">Available funds</p>
+            <p className="text-xs text-gray-600">Available funds</p>
+
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Income</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground text-green-500" />
+            <TrendingUp className="h-4 w-4 text-gray-500 text-green-500" />
+
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-green-500">{formatCurrency(totalIncome)}</div>
-            <p className="text-xs text-muted-foreground">From sales</p>
+            <p className="text-xs text-gray-600">From sales</p>
+
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Expenses</CardTitle>
-            <TrendingDown className="h-4 w-4 text-muted-foreground text-red-500" />
+            <TrendingDown className="h-4 w-4 text-gray-500 text-red-500" />
+
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-red-500">{formatCurrency(totalExpenses)}</div>
-            <p className="text-xs text-muted-foreground">Purchases & expenses</p>
+            <p className="text-xs text-gray-600">Purchases & expenses</p>
+
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Net Cashflow</CardTitle>
-            <ArrowUpDown className="h-4 w-4 text-muted-foreground" />
+            <ArrowUpDown className="h-4 w-4 text-gray-500" />
+
           </CardHeader>
           <CardContent>
             <div className={`text-2xl font-bold ${netCashflow >= 0 ? 'text-green-500' : 'text-red-500'}`}>
               {formatCurrency(netCashflow)}
             </div>
-            <p className="text-xs text-muted-foreground">Income minus expenses</p>
+            <p className="text-xs text-gray-600">Income minus expenses</p>
+
           </CardContent>
         </Card>
       </div>
@@ -276,7 +288,7 @@ export function Cashflow() {
             </div>
             <div className="flex flex-col sm:flex-row gap-2">
               <div className="relative">
-                <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
                 <Input
                   placeholder="Search transactions..."
                   className="pl-8"
@@ -333,7 +345,8 @@ export function Cashflow() {
                   <TableCell>
                     <div className="font-medium">{item.description}</div>
                     {item.reference && (
-                      <div className="text-sm text-muted-foreground">{item.reference}</div>
+                      <div className="text-sm text-gray-600">{item.reference}</div>
+
                     )}
                   </TableCell>
                   <TableCell>

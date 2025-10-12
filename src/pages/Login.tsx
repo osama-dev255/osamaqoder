@@ -58,15 +58,16 @@ export function Login() {
             <CardTitle className="text-3xl font-bold bg-gradient-to-r from-indigo-300 to-purple-300 bg-clip-text text-transparent">
               Railway POS
             </CardTitle>
-            <CardDescription className="text-slate-400 mt-2">
-              Professional Point of Sale System
+            <CardDescription className="text-slate-600 mt-2">
+              Enter your credentials to access your account
             </CardDescription>
+
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="email" className="text-slate-300">Email Address</Label>
+                  <Label htmlFor="email" className="text-slate-700">Email Address</Label>
                   <div className="relative">
                     <Input
                       id="email"
@@ -80,7 +81,7 @@ export function Login() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="password" className="text-slate-300">Password</Label>
+                  <Label htmlFor="password" className="text-slate-700">Password</Label>
                   <div className="relative">
                     <Input
                       id="password"
@@ -97,9 +98,9 @@ export function Login() {
                       onClick={() => setShowPassword(!showPassword)}
                     >
                       {showPassword ? (
-                        <EyeOff className="h-5 w-5 text-slate-400 hover:text-slate-300" />
+                        <EyeOff className="h-5 w-5 text-slate-600 hover:text-slate-800" />
                       ) : (
-                        <Eye className="h-5 w-5 text-slate-400 hover:text-slate-300" />
+                        <Eye className="h-5 w-5 text-slate-600 hover:text-slate-800" />
                       )}
                     </button>
                   </div>
@@ -135,25 +136,25 @@ export function Login() {
             
             <div className="mt-8 pt-6 border-t border-slate-700/50">
               <div className="text-center">
-                <h3 className="text-sm font-medium text-slate-400 mb-3">Demo Credentials</h3>
+                <h3 className="text-sm font-medium text-slate-700 mb-3">Demo Credentials</h3>
                 <div className="grid grid-cols-1 gap-3">
                   <div className="bg-slate-700/30 p-3 rounded-lg">
-                    <p className="text-xs text-slate-500">Administrator</p>
-                    <p className="text-sm text-slate-300">admin@businessproject.co.tz</p>
+                    <p className="text-xs text-slate-600">Administrator</p>
+                    <p className="text-sm text-slate-700">admin@businessproject.co.tz</p>
                   </div>
                   <div className="bg-slate-700/30 p-3 rounded-lg">
-                    <p className="text-xs text-slate-500">Operations Manager</p>
-                    <p className="text-sm text-slate-300">manager@businessproject.co.tz</p>
+                    <p className="text-xs text-slate-600">Operations Manager</p>
+                    <p className="text-sm text-slate-700">manager@businessproject.co.tz</p>
                   </div>
                   <div className="bg-slate-700/30 p-3 rounded-lg">
-                    <p className="text-xs text-slate-500">Cashier</p>
-                    <p className="text-sm text-slate-300">cashier@businessproject.co.tz</p>
+                    <p className="text-xs text-slate-600">Cashier</p>
+                    <p className="text-sm text-slate-700">cashier@businessproject.co.tz</p>
                   </div>
                 </div>
               </div>
             </div>
             
-            <div className="mt-6 text-center text-xs text-slate-500">
+            <div className="mt-6 text-center text-xs text-slate-600">
               <p>© 2025 Business Project Tanzania. All rights reserved.</p>
             </div>
           </CardContent>

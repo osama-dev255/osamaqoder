@@ -121,13 +121,13 @@ export function Reports() {
       <div className="space-y-6">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Reports</h2>
-          <p className="text-muted-foreground">
-            Generating business insights...
+          <p className="text-gray-600">
+            Generate and manage business reports
           </p>
         </div>
         <Card>
           <CardContent className="flex items-center justify-center h-64">
-            <div className="text-muted-foreground">Loading report data...</div>
+            <div className="text-gray-600">Loading report data...</div>
           </CardContent>
         </Card>
       </div>
@@ -139,8 +139,8 @@ export function Reports() {
       <div className="space-y-6">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Reports</h2>
-          <p className="text-muted-foreground">
-            Business performance analytics
+          <p className="text-gray-600">
+            View and manage your reports
           </p>
         </div>
         <Card>
@@ -156,8 +156,8 @@ export function Reports() {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold tracking-tight">Reports</h2>
-        <p className="text-muted-foreground">
-          Business performance analytics
+        <p className="text-gray-600">
+          Generate and manage comprehensive business reports
         </p>
       </div>
 
@@ -170,10 +170,10 @@ export function Reports() {
                 <CardTitle className="text-sm font-medium">
                   {report.title}
                 </CardTitle>
-                <Icon className="h-4 w-4 text-muted-foreground" />
+                <Icon className="h-4 w-4 text-gray-500" />
               </CardHeader>
               <CardContent>
-                <div className="text-sm text-muted-foreground">
+                <div className="text-sm text-gray-600">
                   {report.description}
                 </div>
                 <Button variant="outline" size="sm" className="mt-2 w-full">

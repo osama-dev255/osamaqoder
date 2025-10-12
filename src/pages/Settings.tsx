@@ -7,7 +7,6 @@ import { Switch } from '@/components/ui/switch';
 import { 
   Save, 
   Building, 
-  Receipt, 
   Bell, 
   Shield, 
   Printer,
@@ -55,14 +54,15 @@ export function Settings() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold tracking-tight">Settings</h2>
+        <h1 className="text-3xl font-bold">Settings</h1>
         <p className="text-muted-foreground">
-          Configure your POS system preferences
+          Manage your business settings and preferences
         </p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-3">
-        <div className="space-y-6 lg:col-span-2">
+      <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
+        <div className="space-y-6">
+          {/* Business Information Card */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
@@ -70,7 +70,7 @@ export function Settings() {
                 Business Information
               </CardTitle>
               <CardDescription>
-                Your business details for receipts and reports
+                Update your business details and contact information
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -80,54 +80,51 @@ export function Settings() {
                   id="businessName"
                   value={businessName}
                   onChange={(e) => setBusinessName(e.target.value)}
-                  placeholder="Enter business name"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="businessAddress">Business Address</Label>
+                <Label htmlFor="businessAddress">Address</Label>
                 <Input
                   id="businessAddress"
                   value={businessAddress}
                   onChange={(e) => setBusinessAddress(e.target.value)}
-                  placeholder="Enter business address"
                 />
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="businessPhone">Phone Number</Label>
+                  <Label htmlFor="businessPhone">Phone</Label>
                   <Input
                     id="businessPhone"
                     value={businessPhone}
                     onChange={(e) => setBusinessPhone(e.target.value)}
-                    placeholder="Enter phone number"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="businessEmail">Email Address</Label>
+                  <Label htmlFor="businessEmail">Email</Label>
                   <Input
                     id="businessEmail"
                     type="email"
                     value={businessEmail}
                     onChange={(e) => setBusinessEmail(e.target.value)}
-                    placeholder="Enter email address"
                   />
                 </div>
               </div>
             </CardContent>
           </Card>
 
+          {/* Financial Settings Card */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
-                <Receipt className="mr-2 h-5 w-5" />
-                Sales Settings
+                <Database className="mr-2 h-5 w-5" />
+                Financial Settings
               </CardTitle>
               <CardDescription>
-                Configure sales and receipt preferences
+                Configure currency, tax rates, and financial preferences
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="currency">Currency</Label>
                   <Select value={currency} onValueChange={setCurrency}>
@@ -146,24 +143,26 @@ export function Settings() {
                   <Input
                     id="taxRate"
                     type="number"
+                    step="0.1"
                     value={taxRate}
                     onChange={(e) => setTaxRate(e.target.value)}
-                    placeholder="Enter tax rate"
                   />
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="receiptFooter">Receipt Footer Message</Label>
+                <Label htmlFor="receiptFooter">Receipt Footer</Label>
                 <Input
                   id="receiptFooter"
                   value={receiptFooter}
                   onChange={(e) => setReceiptFooter(e.target.value)}
-                  placeholder="Enter receipt footer message"
                 />
               </div>
             </CardContent>
           </Card>
+        </div>
 
+        <div className="space-y-6">
+          {/* Notifications Card */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
@@ -171,15 +170,15 @@ export function Settings() {
                 Notifications
               </CardTitle>
               <CardDescription>
-                Configure system notifications and alerts
+                Configure how you receive alerts and notifications
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <Label>System Notifications</Label>
+                  <Label>Push Notifications</Label>
                   <p className="text-sm text-muted-foreground">
-                    Receive important system updates and alerts
+                    Receive notifications on your device
                   </p>
                 </div>
                 <Switch
@@ -201,9 +200,8 @@ export function Settings() {
               </div>
             </CardContent>
           </Card>
-        </div>
 
-        <div className="space-y-6">
+          {/* Hardware Card */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
@@ -211,15 +209,15 @@ export function Settings() {
                 Hardware
               </CardTitle>
               <CardDescription>
-                Configure hardware settings
+                Configure hardware settings and integrations
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <Label>Receipt Printer</Label>
+                  <Label>Enable Receipt Printer</Label>
                   <p className="text-sm text-muted-foreground">
-                    Enable receipt printing
+                    Automatically print receipts after sales
                   </p>
                 </div>
                 <Switch
@@ -227,48 +225,10 @@ export function Settings() {
                   onCheckedChange={setPrinterEnabled}
                 />
               </div>
-              <div className="space-y-2">
-                <Label>Printer Model</Label>
-                <Select defaultValue="thermal">
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select printer" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="thermal">Thermal Printer</SelectItem>
-                    <SelectItem value="laser">Laser Printer</SelectItem>
-                    <SelectItem value="inkjet">Inkjet Printer</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <Database className="mr-2 h-5 w-5" />
-                Data Management
-              </CardTitle>
-              <CardDescription>
-                Backup and restore your data
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <Button variant="outline" className="w-full">
-                <Database className="mr-2 h-4 w-4" />
-                Backup Data
-              </Button>
-              <Button variant="outline" className="w-full">
-                <Database className="mr-2 h-4 w-4" />
-                Restore Data
-              </Button>
-              <Button variant="outline" className="w-full">
-                <Database className="mr-2 h-4 w-4" />
-                Export to Excel
-              </Button>
-            </CardContent>
-          </Card>
-
+          {/* Security Card */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
@@ -276,31 +236,37 @@ export function Settings() {
                 Security
               </CardTitle>
               <CardDescription>
-                Manage security settings
+                Manage security settings and authentication
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <Button variant="outline" className="w-full">
-                <Shield className="mr-2 h-4 w-4" />
-                Change Password
-              </Button>
-              <Button variant="outline" className="w-full">
-                <Shield className="mr-2 h-4 w-4" />
-                Two-Factor Authentication
-              </Button>
-              <Button variant="outline" className="w-full">
-                <Shield className="mr-2 h-4 w-4" />
-                Audit Logs
-              </Button>
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label>Two-Factor Authentication</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Add an extra layer of security to your account
+                  </p>
+                </div>
+                <Switch />
+              </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label>Session Timeout</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Automatically log out after inactivity
+                  </p>
+                </div>
+                <Switch defaultChecked />
+              </div>
             </CardContent>
           </Card>
         </div>
       </div>
 
       <div className="flex justify-end">
-        <Button onClick={handleSave}>
+        <Button onClick={handleSave} className="flex items-center">
           <Save className="mr-2 h-4 w-4" />
-          Save Settings
+          Save Changes
         </Button>
       </div>
     </div>

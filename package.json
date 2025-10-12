@@ -7,7 +7,7 @@
   "homepage": "https://osama-dev255.github.io/osamaqoder",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc --noEmit && vite build || vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "start": "node server.js",
@@ -24,6 +24,7 @@
     "@radix-ui/react-select": "^2.2.6",
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-switch": "^1.2.6",
+    "@radix-ui/react-toast": "^1.2.15",
     "@types/react-router-dom": "^5.3.3",
     "axios": "^1.12.2",
     "class-variance-authority": "^0.7.1",

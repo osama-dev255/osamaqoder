@@ -141,7 +141,7 @@ export function EndOfDayReport() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="text-muted-foreground">Generating end of day report...</div>
+        <div className="text-gray-600">Generating end of day report...</div>
       </div>
     );
   }
@@ -159,7 +159,7 @@ export function EndOfDayReport() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">End of Day Report</h2>
-          <p className="text-muted-foreground">
+          <p className="text-gray-600">
             Daily sales summary and performance metrics
           </p>
         </div>

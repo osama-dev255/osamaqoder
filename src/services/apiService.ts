@@ -54,6 +54,19 @@ export const getAllSheetsData = async () => {
   }
 };
 
+// Export sheets data
+export const exportSheetsData = async (format: 'csv' | 'json') => {
+  try {
+    const response = await apiClient.get(API_ENDPOINTS.EXPORT(format), {
+      responseType: 'blob'
+    });
+    return response;
+  } catch (error: unknown) {
+    console.error('Export error:', error);
+    throw error;
+  }
+};
+
 // Get specific sheet data
 export const getSheetData = async (sheetName: string, range?: string) => {
   try {
@@ -102,6 +115,19 @@ export const clearSheetData = async (sheetName: string, range?: string) => {
   }
 };
 
+// Delete a row from a sheet
+export const deleteSheetRow = async (sheetName: string, rowIndex: number) => {
+  try {
+    // For Google Sheets, we can't actually delete a row, but we can clear its contents
+    // We'll clear the row by setting all cells to empty strings
+    const response = await apiClient.delete(`${API_ENDPOINTS.SHEETS}/${sheetName}/row/${rowIndex}`);
+    return response;
+  } catch (error: unknown) {
+    console.error(`Delete row error for ${sheetName}:`, error);
+    throw error;
+  }
+};
+
 // Update inventory quantities for specific products
 export const updateInventoryQuantities = async (updates: { productName: string; quantityChange: number }[]) => {
   try {
@@ -114,7 +140,7 @@ export const updateInventoryQuantities = async (updates: { productName: string; 
 };
 
 // Add stock through purchase transactions
-export const addStockThroughPurchases = async (purchases: { productName: string; quantity: number; cost: number }[]) => {
+export const addStockThroughPurchases = async (purchases: { productName: string; quantity: number; cost: number; supplier?: string; location?: string; purchasedBy?: string }[]) => {
   try {
     const response = await apiClient.post(`${API_ENDPOINTS.SHEETS}/purchases/add-stock`, { purchases });
     return response;
@@ -135,14 +161,58 @@ export const renameSheet = async (oldName: string, newName: string) => {
   }
 };
 
+// Record sales transactions
+export const recordSales = async (sales: { 
+  id: string;
+  receiptNo: string;
+  date: string;
+  time: string;
+  category: string;
+  product: string;
+  price: number;
+  discount: number;
+  quantity: number;
+  totalAmount: number;
+  soldBy: string;
+  status: string;
+  amountReceived: number;
+  change: number;
+}[]) => {
+  try {
+    const response = await apiClient.post(`${API_ENDPOINTS.SHEETS}/sales/record`, { sales });
+    return response;
+  } catch (error: unknown) {
+    console.error('Sales recording error:', error);
+    throw error;
+  }
+};
+
+// Get sales data
+export const getSalesData = async (range?: string) => {
+  try {
+    const url = range 
+      ? API_ENDPOINTS.SHEET_RANGE('Sales', range)
+      : API_ENDPOINTS.SHEET_DATA('Sales');
+    const response = await apiClient.get(url);
+    return response;
+  } catch (error: unknown) {
+    console.error('Sales data fetch error:', error);
+    throw error;
+  }
+};
+
 export default {
   healthCheck,
   getSpreadsheetMetadata,
   getAllSheetsData,
+  exportSheetsData,
   getSheetData,
   appendSheetData,
   updateSheetRange,
   clearSheetData,
+  deleteSheetRow,
   updateInventoryQuantities,
   addStockThroughPurchases,
+  recordSales,
+  getSalesData,
 };

@@ -11,11 +11,15 @@ interface PrintReceiptProps {
       name: string;
       price: number;
       quantity: number;
+      discount?: number;
+      notes?: string;
     }>;
     subtotal: number;
     tax: number;
     total: number;
     paymentMethod: string;
+    amountReceived?: number;
+    change?: number;
   };
 }
 
@@ -63,8 +67,11 @@ export function PrintReceipt({ data }: PrintReceiptProps) {
                 <div>
                   <span>{item.name}</span>
                   <span className="ml-2">x{item.quantity}</span>
+                  {item.discount && item.discount > 0 && (
+                    <span className="ml-2 text-xs text-red-500">(-{formatCurrency(item.discount)})</span>
+                  )}
                 </div>
-                <span>{formatCurrency(item.price * item.quantity)}</span>
+                <span>{formatCurrency(item.price * item.quantity - (item.discount || 0))}</span>
               </div>
             ))}
           </div>
@@ -75,13 +82,25 @@ export function PrintReceipt({ data }: PrintReceiptProps) {
               <span>{formatCurrency(data.subtotal)}</span>
             </div>
             <div className="flex justify-between">
-              <span>Tax:</span>
+              <span>Tax (18%):</span>
               <span>{formatCurrency(data.tax)}</span>
             </div>
             <div className="flex justify-between font-bold mt-1 pt-1 border-t">
               <span>Total:</span>
               <span>{formatCurrency(data.total)}</span>
             </div>
+            {data.amountReceived !== undefined && (
+              <>
+                <div className="flex justify-between">
+                  <span>Amount Received:</span>
+                  <span>{formatCurrency(data.amountReceived)}</span>
+                </div>
+                <div className="flex justify-between font-bold">
+                  <span>Change:</span>
+                  <span>{formatCurrency(data.change || 0)}</span>
+                </div>
+              </>
+            )}
           </div>
           
           <div className="mt-4 text-center text-xs">

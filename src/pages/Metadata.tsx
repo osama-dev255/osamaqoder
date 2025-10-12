@@ -51,16 +51,16 @@ export function Metadata() {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold tracking-tight">Spreadsheet Metadata</h2>
-        <p className="text-muted-foreground">
-          Detailed information about your spreadsheet
+        <p className="text-gray-600">
+          View and manage your spreadsheet metadata
         </p>
       </div>
 
       <div className="flex justify-between items-center">
         <div>
           <h3 className="text-lg font-medium">Spreadsheet Information</h3>
-          <p className="text-sm text-muted-foreground">
-            Details about your Google Sheets document
+          <p className="text-sm text-gray-600">
+            Detailed information about your spreadsheet
           </p>
         </div>
         <Button onClick={handleRefresh} disabled={refreshing}>
@@ -71,7 +71,7 @@ export function Metadata() {
 
       {loading ? (
         <div className="flex items-center justify-center h-32">
-          <div className="text-muted-foreground">Loading metadata...</div>
+          <div className="text-gray-600">Loading metadata...</div>
         </div>
       ) : error ? (
         <Card>
@@ -91,33 +91,33 @@ export function Metadata() {
             <CardContent className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Title</span>
+                  <span className="text-gray-600">Title</span>
                   <span className="font-medium">{metadata.title || 'N/A'}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Spreadsheet ID</span>
+                  <span className="text-gray-600">Spreadsheet ID</span>
                   <span className="font-medium text-sm">{metadata.spreadsheetId || 'N/A'}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Locale</span>
+                  <span className="text-gray-600">Locale</span>
                   <span className="font-medium">{metadata.locale || 'N/A'}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Timezone</span>
+                  <span className="text-gray-600">Timezone</span>
                   <span className="font-medium">{metadata.timeZone || 'N/A'}</span>
                 </div>
               </div>
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Total Sheets</span>
+                  <span className="text-gray-600">Total Sheets</span>
                   <span className="font-medium">{metadata.sheets?.length || 0}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Status</span>
+                  <span className="text-gray-600">Status</span>
                   <Badge variant="secondary">Active</Badge>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Last Updated</span>
+                  <span className="text-gray-600">Last Updated</span>
                   <span className="font-medium text-sm">
                     {metadata.properties?.modifiedTime 
                       ? new Date(metadata.properties.modifiedTime).toLocaleString() 
@@ -177,7 +177,7 @@ export function Metadata() {
         </div>
       ) : (
         <Card>
-          <CardContent className="py-8 text-center text-muted-foreground">
+          <CardContent className="py-8 text-center text-gray-600">
             No metadata available
           </CardContent>
         </Card>

@@ -109,8 +109,8 @@ export function RefundProcessor() {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold tracking-tight">Process Refund</h2>
-        <p className="text-muted-foreground">
-          Handle customer returns and issue refunds
+        <p className="text-gray-600">
+          Process customer refunds and returns
         </p>
       </div>
 
@@ -165,15 +165,15 @@ export function RefundProcessor() {
             <CardContent>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                 <div>
-                  <p className="text-sm text-muted-foreground">Customer</p>
+                  <p className="text-sm text-gray-600">Customer</p>
                   <p className="font-medium">{searchResult.customer}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Payment Method</p>
+                  <p className="text-sm text-gray-600">Payment Method</p>
                   <p className="font-medium">{searchResult.paymentMethod}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Total Amount</p>
+                  <p className="text-sm text-gray-600">Total Amount</p>
                   <p className="font-medium text-lg">{formatCurrency(searchResult.totalAmount)}</p>
                 </div>
               </div>
@@ -238,7 +238,7 @@ export function RefundProcessor() {
                 <div className="flex items-center justify-between p-4 bg-muted rounded-md">
                   <div>
                     <p className="font-medium">Refund Amount</p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-gray-600">
                       {refundItems.length} item{refundItems.length !== 1 ? 's' : ''} selected
                     </p>
                   </div>
@@ -285,7 +285,7 @@ export function RefundProcessor() {
       {!searchResult && !error && (
         <Card>
           <CardContent className="flex items-center justify-center h-32">
-            <div className="text-center text-muted-foreground">
+            <div className="text-center text-gray-600">
               <Receipt className="h-12 w-12 mx-auto mb-2" />
               <p>Enter a receipt number to begin processing a refund</p>
             </div>

@@ -2,57 +2,27 @@
   padding: 1rem;
   border-radius: 8px;
   margin-bottom: 1rem;
-  background-color: #f8f9fa;
-  border: 1px solid #e9ecef;
+  background-color: #f1f5f9; /* Updated from #f8f9fa for better consistency */
+  border: 1px solid #e2e8f0; /* Updated from #e9ecef for better consistency */
 }
 
 .health-status.loading {
   text-align: center;
-  color: #6c757d;
-}
-
-.health-status.error {
-  background-color: #f8d7da;
-  border-color: #f5c6cb;
-  color: #721c24;
-}
-
-.status-indicator {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
-  font-weight: bold;
+  color: #0f172a; /* Updated from #6c757d for better contrast in light mode */
 }
 
 .status-indicator.success {
-  color: #155724;
+  color: #0f172a; /* Updated from #155724 for better visibility */
 }
 
 .status-indicator.error {
-  color: #721c24;
-}
-
-.status-dot {
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background-color: #dc3545;
-}
-
-.status-indicator.success .status-dot {
-  background-color: #28a745;
-}
-
-.status-indicator.error .status-dot {
-  background-color: #dc3545;
-  animation: pulse 1.5s infinite;
+  color: #dc2626; /* Updated from #721c24 for better visibility */
 }
 
 .status-details p {
   margin: 0.25rem 0;
   font-size: 0.9rem;
+  color: #0f172a; /* Added explicit color for better visibility */
 }
 
 @keyframes pulse {

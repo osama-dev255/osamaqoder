@@ -55,9 +55,10 @@ export function Sheets() {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold tracking-tight">Sheets Management</h2>
-        <p className="text-muted-foreground">
-          Manage your Google Sheets data
+        <p className="text-gray-600">
+          View and manage your spreadsheet data
         </p>
+
       </div>
 
       <Card>
@@ -71,7 +72,7 @@ export function Sheets() {
             </div>
             <div className="flex flex-col sm:flex-row gap-2">
               <div className="relative">
-                <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
                 <Input
                   placeholder="Search sheets..."
                   className="pl-8"
@@ -89,7 +90,7 @@ export function Sheets() {
         <CardContent>
           {loading ? (
             <div className="flex items-center justify-center h-32">
-              <div className="text-muted-foreground">Loading sheets...</div>
+              <div className="text-gray-600">Loading sheets...</div>
             </div>
           ) : error ? (
             <div className="text-red-500 text-center py-4">{error}</div>
@@ -129,7 +130,7 @@ export function Sheets() {
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center text-muted-foreground">
+                    <TableCell colSpan={5} className="text-center text-gray-600">
                       No sheets found
                     </TableCell>
                   </TableRow>

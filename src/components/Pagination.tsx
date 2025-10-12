@@ -26,7 +26,7 @@ export function Pagination({
 
   return (
     <div className="flex items-center justify-between px-2">
-      <div className="text-sm text-muted-foreground">
+      <div className="text-sm text-gray-600">
         Showing <span className="font-medium">{startIndex}</span> to{' '}
         <span className="font-medium">{endIndex}</span> of{' '}
         <span className="font-medium">{totalItems}</span> results

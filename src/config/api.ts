@@ -9,6 +9,7 @@ export const API_ENDPOINTS = {
   SHEETS: `${API_BASE_URL}/api/v1/sheets`,
   METADATA: `${API_BASE_URL}/api/v1/sheets/metadata`,
   ALL_SHEETS: `${API_BASE_URL}/api/v1/sheets/all`,
+  EXPORT: (format: string) => `${API_BASE_URL}/api/v1/sheets/export/${format}`,
   SHEET_DATA: (sheetName: string) => `${API_BASE_URL}/api/v1/sheets/${sheetName}`,
   SHEET_RANGE: (sheetName: string, range: string) => `${API_BASE_URL}/api/v1/sheets/${sheetName}/range/${range}`,
   APPEND_DATA: (sheetName: string) => `${API_BASE_URL}/api/v1/sheets/${sheetName}/append`,
